@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Internet access</title>
+    <meta charset='utf-8'>
+    <script src='res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Internet access</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Native networking options</h3>
+<ul>
+  <li>Raw java Sockets</li>
+  <li>HttpUrlConnection</li>
+  <li>HttpClient</li>
+</ul>
+<p>Any of these requires INTERNET permission!</p>
+<pre><code>android:name="android.permission.INTERNET"</code></pre>
+		
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>HttpUrlConnection</h3>
+<ul>
+  <li>Standard from java</li>
+  <li>HttpUrlConnection extends UrlConnection that represent a communications link between the application and a URL</li>
+  <li>UrlConnection uses TCP sockets and standard java.io stream classes. Do not use the main UI thread.</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>HttpUrlConnection examples</h3>
+<pre><code>URL url = new URL("http://hostname:80/index.html");
+BufferedReader in = new BufferedReader(new
+InputStreamReader(url.openStream()));
+String str;
+while ((str = in.readLine()) != null) {
+  // str is one line of text sans newline
+}
+in.close();</code></pre>
+
+<pre><code>URL url = new URL("http://hostname:80/index.html");
+HttpURLConnection c = (HttpURLConnection) url.openConnection();
+c.connect();
+...
+c.disconnect();</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Why HttpUrlConnection?</h3>
+<ul>
+  <li>Perfect for simple networking tasks via HTTP</li>
+  <li>Avoid performance penalty of setting up HttpClient</li>
+</ul>
+<br>
+<h3>Why not to use HttpUrlConnection?</h3>
+<ul>
+  <li>Interface difficult to use</li>
+  <li>It turns http header names in lowercase (fixed from gingerbread)</li>
+</ul>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>HttpClient</h3>
+<ul>
+  <li>Apache implementation of UrlConnection is high-level, heavy, and powerful.</li>
+  <li>Better if you want to maintain a context between different calls</li>
+  <li>Android contains the Apache HttpClient library. You can either use the DefaultHttpClient or AndroidHttpClient to setup the HTTP client.</li>
+  <li>DefaultHttpClient is the standard HttpClient and uses the SingleClientConnManager class to handle HTTP connections. SingleClientConnManager is not thread-safe, this means that access to it via several threads will create problems.</li>
+</ul>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>HttpClient</h3>
+<pre><code>//Create a client instance
+HttpClient client = new DefaultHttpClient();
+
+//Create a Method
+HttpGet request = new HttpGet();
+request.setURI(new URI("http://www.google.com/"));
+
+//Have the client execute the method
+HttpResponse response = client.execute(request);
+ 
+//Process the results
+response.getEntity().getContent()</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>HttpClient: Threads</h3>
+<p>DefaultHttpClient is not Thread-Safe set the ThreadSafeClientConnManager</p>
+<pre><code>HttpParams params = new BasicHttpParams();
+
+//lots of parameters to set!
+
+ClientConnectionManager manager = 
+  new ThreadSafeClientConnManager(params, schemeRegistry);
+new DefaultHttpClient(manager, params);</code></pre>
+<a href="https://github.com/novoda/HttpService/blob/master/core/src/main/java/com/novoda/httpservice/provider/http/AndroidHttpClient.java">AndroidHttpClient example</a>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>HttpResponse</h3>
+<ul>
+  <li>Low-level access to entire response: status, headers, entities</li>
+  <li>You need to manually retrieve all the entity contents</li>
+</ul>
+<pre><code>HttpResponse response = client.execute(request);
+// Get the response
+BufferedReader rd = new BufferedReader(new InputStreamReader(
+  response.getEntity().getContent()));
+String line = "";
+while ((line = rd.readLine()) != null) {
+  textView.append(line);
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>ResponseHandler</h3>
+<ul>
+  <li>Encapsulates entity handling</li>
+  <li>BasicResponseHandler for String entities</li>
+</ul>
+<pre><code>public class HttpResponseHandler implements ResponseHandler{
+  public InputStream handleResponse(HttpResponse response) {
+    //implementation
+  }
+}
+</code></pre>
+<pre><code>HttpClient httpclient = new DefaultHttpClient();
+HttpGet httpget = new HttpGet(target);
+ResponseHandler httpResponseHandler = new HttpResponseHandler();
+InputStream in = 
+  httpclient.execute(httpget, httpResponseHandler);
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Checking network state</h3>
+<pre><code>android:name="android.permission.ACCESS_NETWORK_STATE"</code></pre>
+<pre><code>ConnectivityManager cm = (ConnectivityManager) 
+    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+NetworkInfo info = cm.getNetworkInfo(connectionType);
+if (info == null) return false;
+if (info.getState() == NetworkInfo.State.CONNECTED
+     || info.getState() == NetworkInfo.State.CONNECTING) {
+     return true;
+}
+return false;
+</code></pre>
+<p>Connection types : ConnectivityManager.TYPE_WIFI, ConnectivityManager.TYPE_MOBILE</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Handling network configuration changes</h3>
+<pre><code>//on create method
+IntentFilter if = new IntentFilter(
+  ConnectivityManager.CONNECTIVITY_ACTION);
+registerReceeiver(new ConnectionChangeReceiver(), if);
+  </code></pre>
+  <pre><code>public class ConnectionChangeReceiver extends BroadcastReceiver {
+  public void onReceive(Context context, Intent intent) {
+    //get the network info and do something
+  }  
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Proxy</h3>
+<pre><code>Settings.System.putString(getContentResolver(), 
+    Settings.System.HTTP_PROXY, "personalproxy:8080");</code></pre>
+<pre><code>Properties properties = System.getProperties();
+properties.put("http.proxyHost", "your.proxy.host.here");
+properties.put("http.proxyPort", "8080");
+</code></pre>
+<p>you need additional permission for this :</p>
+<pre><code>android.permission.WRITE_SETTINGS</code></pre>
+
+<!-- ==================================================== -->     
+</article><!-- slide separator--><article>  
+<!-- ==================================================== -->
+
+<h3>Debugging</h3>
+<p>To log all the httpclient activity</p>
+<pre><code>String config = "org.apache.http.impl.conn.level = FINEST\n"
+  + "org.apache.http.impl.client.level = FINEST\n"
+  + "org.apache.http.client.level = FINEST\n" 
+  + "org.apache.http.level = FINEST";
+InputStream in = new ByteArrayInputStream(config.getBytes());
+LogManager.getLogManager().readConfiguration(in);
+  
+Logger rootLogger = LogManager.getLogManager().getLogger("");
+activeHandler = new DalvikLogHandler();
+activeHandler.setLevel(Level.ALL);
+rootLogger.addHandler(activeHandler);</code></pre>
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
