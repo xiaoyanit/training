@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Jars</title>
+    <meta charset='utf-8'>
+    <script src='res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<!-- ==================================================== -->
+<article>
+
+<h1>Jars</h1>  
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>General jar mechanics</h3>
+<ul>
+  <li>Find a likely JAR</li>
+  <li>Put it in libs/</li>
+  <li>Code to the API, compile, use!</li>
+</ul>	
+<p>Unfortunately is not always so easy</p>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Issues with Porting to Android - 1</h3>
+<ul>
+  <li>Existing code might expect to be running on JavaSE, JavaME, JavaEE – not everything available</li>
+  <li>Presumed locations of files (read, write)</li>
+  <li>Windows-or-other tests fail</li>
+  <li>Wrappers around console applications</li>
+  <li>JNI</li> 
+  <li>Older Java – need 1.5 or above</li>
+</ul>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Issues with Porting to Android - 2</h3>
+<ul>
+  <li>Java 7</li>
+  <li>Duplicate classes (example : org.json.*)</li>
+  <li>JAR dependencies</li>
+</ul>
+  
+<!-- ==================================================== -->
+</article>
+
+    </section>
+  </body>
+</html>
