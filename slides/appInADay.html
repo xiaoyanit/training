@@ -299,6 +299,33 @@ public Cursor query(Uri uri, String[] projection, String selection,
 </code></pre>
 
 <!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 6</h3>
+<ul>   
+  <li>Use the cursor to provide results in the SearchResultActivity</li>
+</ul>
+<pre><code>Uri uri = Uri.parse(
+  "content://com.novoda.traning.appinaday/results");
+Cursor c = getContentResolver().query(uri, null, null, null, null);
+List&lt;String&gt; values = new ArrayList&lt;String&gt;();
+while (c.moveToNext()){
+	values.add(c.getString(c.getColumnIndex("title")));
+}
+c.close();
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 6 - Notes</h3>
+<ul>   
+  <li>CursorAdapter instead of ArrayAdapter</li>
+</ul>
+
+<!-- ==================================================== -->
 </article>
 
     </section>
