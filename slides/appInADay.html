@@ -144,6 +144,159 @@ setListAdapter(adapter);</code></pre>
    <li>Modify search_result_activity.xml layout with ListView and id = @+android:id/list</li>
    <li>Create the search_result_item.xml</li>
 </ul>
+<pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android=
+    "http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" &gt;
+  &lt;TextView
+    android:id="@+id/title"
+    android:gravity="center"
+    android:layout_width="fill_parent"
+    android:layout_height="40dp" &gt;
+  &lt;/TextView&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 5</h3>
+<ul>   
+   <li>Create a content provider</li>
+   <li>Add some log in the implementation of crud operations</li>
+   <li>Call query from the SearchResultActivity</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 5</h3>
+<ul>   
+   <li>Create a class that extends ContentProvider</li>
+   <li>Implements all the methods necessary</li>
+</ul>
+<pre><code>private static final String TAG = "AppInAday";
+@Override
+public int delete(Uri arg0, String arg1, String[] arg2) {
+  Log.v(TAG, "delete");
+  return 0;
+}
+@Override
+public String getType(Uri uri) {
+  Log.v(TAG, "type");
+  return null;
+}
+@Override
+public Uri insert(Uri uri, ContentValues values) {
+  Log.v(TAG, "insert");
+return null;
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 5</h3>
+<pre><code>@Override
+  public boolean onCreate() {
+  Log.v(TAG, "onCreate");
+  return false;
+}
+@Override
+public Cursor query(Uri uri, String[] projection, String selection,
+    String[] selectionArgs, String sortOrder) {
+  Log.v(TAG, "query");
+  return null;
+}
+@Override
+public int update(Uri uri, ContentValues values, String selection,
+    String[] selectionArgs) {
+  Log.v(TAG, "update");
+  return 0;
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 5</h3>
+<ul>   
+   <li>Declare the provider in the manifest</li>
+</ul>
+<pre><code>&lt;provider android:name=".SearchResultProvider" 
+android:authorities="com.novoda.traning.appinaday" /&gt;
+</code></pre>
+<ul>   
+   <li>Make a query in the SearchResultActivity</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 6</h3>
+<ul>   
+   <li>Add a database</li>
+   <li>Implement insert, delete and query</li>
+   <li>Put some fixture data in the database</li>
+   <li>Log the query in the SearchResultActivity</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 6</h3>
+<ul>   
+  <li>Create a new class DatabaseHelper and extend SQLiteOpenHelper</li>
+  <li>Set a database and version</li>
+</ul>
+<pre><code>private static final String DATABASE_NAME = "appinaday.db";
+private static final int DATABASE_VERSION = 1;
+  
+public DatabaseHelper(Context context) {
+  super(context, DATABASE_NAME, null, DATABASE_VERSION);
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 6</h3>
+<ul>   
+  <li>Implement the onCreate method and create the table and import some data</li>
+</ul>
+<pre><code>db.execSQL("CREATE TABLE results 
+  (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)");
+db.execSQL("INSERT INTO results (title) VALUES (\"title 1\")");
+db.execSQL("INSERT INTO results (title) VALUES (\"title 2\")");
+db.execSQL("INSERT INTO results (title) VALUES (\"title 3\")");
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 6</h3>
+<ul>   
+  <li>Add implementation of query to the content provider</li>
+</ul>
+<pre><code>private DatabaseHelper databaseHelper;
+@Override
+public boolean onCreate() {
+  databaseHelper = new DatabaseHelper(getContext());
+  return false;
+}
+@Override
+public Cursor query(Uri uri, String[] projection, String selection, 
+    String[] selectionArgs, String sortOrder) {
+  return databaseHelper.getReadableDatabase().query("results", 
+      projection, selection, selectionArgs, null, null, sortOrder); 
+}
+</code></pre>
 
 <!-- ==================================================== -->
 </article>

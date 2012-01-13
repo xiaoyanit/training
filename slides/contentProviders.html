@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Content providers</title>
+    <meta charset='utf-8'>
+    <script src='res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Content providers</h1>  
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Content providers</h3>
+<ul>
+  <li>Content providers store and retrieve data and make it accessible to all applications.</li>
+  <li>Any uri that begins with the content:// scheme represents a resource served by a content provider</li>
+  <li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to implement content providers</h3>
+<ul>
+  <li>Create a class that extends ContentProvider</li>
+  <li>Implements all the methods necessary</li>
+  <li>Declare the provider in the manifest</li>
+</ul>
+<pre><code>&lt;provider android:name=".SearchResultProvider" 
+android:authorities="com.novoda.traning.appinaday" /&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Content provider operations</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Uri and UriMatcher</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Authorities</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to use the content provider</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Queries from main ui thread and stuff not to do</h3>
+
+<!-- ==================================================== -->
+</article>
+
+    </section>
+  </body>
+</html>
