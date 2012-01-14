@@ -1,13 +1,12 @@
 .content {
 	margin: 0 auto;
-	width: 900px;
+	width: 1027px;
 }
 
 .bar {
 	display: inline-block;
-	width: 885px;
-	height: 50px;
-	text-align: center;
+	width: 1027px;
+	height: 30px;
 	margin-bottom: 10px;
 	margin-top: 20px;
 	background-color: #D14836;
@@ -25,23 +24,19 @@
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
-	font-size: 11px;
+	font-size: 20px;
 	font-weight: bold;
 	text-align: center;
-	line-height: 27px;
+	
 	outline: 0;
-	padding: 0 8px;
 }
 
 .talk {
 	display: inline-block;
 	vertical-align: top;
 	width: 200px;
-	height: 150px;
-	text-align: center;
-	margin-left: 3px;
-	margin-top: 3px;
-	border: 1px solid transparent;
+	height: 80px;
+	margin: 2px;
 	color: white;
 	background-color: #4D90FE;
 	background-image: -webkit-linear-gradient(top, #4d90fe, #4787ed);
@@ -56,23 +51,20 @@
 	-moz-border-radius: 4px;
 	border-radius: 6px;
 	cursor: pointer;
-	font-size: 11px;
+	font-size: 20px;
 	font-weight: bold;
 	text-align: center;
 	line-height: 27px;
 	outline: 0;
-	padding: 0 8px;
 }
 
 .exercise {
 	display: inline-block;
 	vertical-align: top;
 	width: 200px;
-	height: 150px;
+	height: 80px;
 	text-align: center;
-	margin-left: 3px;
-	margin-top: 3px;
-	border: 1px solid transparent;
+	margin: 2px;
 	color: white;
 	background-color: #4CC417;
 	background-image: -webkit-linear-gradient(top, #4CC417, #41A317);
@@ -87,12 +79,39 @@
 	-moz-border-radius: 4px;
 	border-radius: 6px;
 	cursor: pointer;
-	font-size: 11px;
+	font-size: 20px;
 	font-weight: bold;
 	text-align: center;
 	line-height: 27px;
 	outline: 0;
-	padding: 0 8px;
+}
+
+.training {
+	display: inline-block;
+	vertical-align: top;
+	width: 200px;
+	height: 80px;
+	text-align: center;
+	margin: 2px;
+	color: white;
+	background-color: #FDD017;
+	background-image: -webkit-linear-gradient(top,#FDD017,#FBB917);
+	background-image: -moz-linear-gradient(top,#FDD017,#FBB917);
+	background-image: -ms-linear-gradient(top,#FDD017,#FBB917);
+	background-image: -o-linear-gradient(top,#FDD017,#FBB917);
+	background-image: linear-gradient(top,#FDD017,#FBB917);
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+	text-transform: uppercase;
+	border-image: initial;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 27px;
+	outline: 0;
 }
 
 .clear {
