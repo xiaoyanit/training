@@ -52,12 +52,12 @@
 <!-- ==================================================== -->
 
 <h3>Solution 2</h3>
-<ul><li>In main layout add EditText with id keyword</li></ul>
+<p>In main layout add EditText with id keyword</p>
 <pre><code>&lt;EditText android:id="@+id/keyword"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content" /&gt;
 </code></pre>
-<ul><li>In main layout add Button with id submit</li></ul>
+<p>In main layout add Button with id submit</p>
 <pre><code>&lt;Button
   android:id="@+id/submit"
   android:layout_width="fill_parent"
@@ -70,9 +70,9 @@
 <!-- ==================================================== -->
 
 <h3>Solution 2</h3>
-<ul><li>Change the string to search</li></ul>
+<p>Change the string to search</p>
 <pre><code>&lt;string name="search"&gt;Search&lt;/string&gt;</code></pre>
-<ul><li>Add the click listener in the DashboardActivity and log the content of keyword</li></ul>
+<p>Add the click listener in the DashboardActivity and log the content of keyword</p>
 <pre><code>final EditText editText = (EditText)findViewById(R.id.keyword);
   Button submit = (Button)findViewById(R.id.submit);
   submit.setOnClickListener(new OnClickListener() {
@@ -90,9 +90,9 @@
 <h3>Exercise 3</h3>
 <ul>
   <li>Add new activity SearchResultActivity</li>
-  <li>On search submit move from DashboardActivity to SearchResultActivity</li>
-  <li>Pass the value contained in the EditText to the SearchResultActivity</li>
-  <li>Show the keyword in a TextView in the SearchResultActivity</li>
+  <li>On search submit open the new activity SearchResultActivity</li>
+  <li>Pass the value contained in the EditText with the intent</li>
+  <li>Show the keyword in a TextView in the new activity </li>
 </ul>
 
 <!-- ==================================================== -->
@@ -100,14 +100,29 @@
 <!-- ==================================================== -->
 
 <h3>Solution 3</h3>
-<ul>
-  <li>Create new class SearchResultActivity</li>
-  <li>Add in the manifest the declaration of the new activity</li>
-  <li>Rename main.xml to dashboard_activity.xml</li>
-  <li>Copy dashboard_activity.xml as search_result_activity.xml</li>
-  <li>Edit the layout to have an TextView</li>
-  <li>In the on click listener of the DashboardActivity add the following code</li>
-</ul>
+<p>Create new class SearchResultActivity and setContentView</p>
+<pre><code>@Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+}</code></pre>
+
+<p>Rename main.xml to dashboard_activity.xml </p>
+<p>Copy dashboard_activity.xml as search_result_activity.xml and fix compilation problem</p>
+
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 3</h3>
+<p>Edit the layout to have an TextView</p>
+<pre><code>&lt;TextView
+  android:id="@+id/keyword"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content" /&gt;
+</code></pre>
+<p>In the on click listener of the DashboardActivity add</p>
 <pre><code>Intent i = new Intent(getApplicationContext(), 
   SearchResultActivity.class);
 i.putExtra("keyword", editText.getText().toString());
@@ -118,12 +133,15 @@ startActivity(i);</code></pre>
 <!-- ==================================================== -->
 
 <h3>Solution 3</h3>
-<ul>   
-   <li>Finally onCreate of the SearchResultActivity add :</li>
-</ul>
+<p>onCreate of the SearchResultActivity add :</li>
 <pre><code>TextView keywordView = (TextView)findViewById(R.id.keyword);
 String keyword = getIntent().getStringExtra("keyword");
 keywordView.setText(keyword);</code></pre>
+<p>Finally declare the activity in the manifest</p>
+<pre><code>&lt;activity
+  android:label="@string/app_name"
+  android:name=".SearchResultActivity" &gt;
+&lt;/activity&gt;</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -140,25 +158,24 @@ keywordView.setText(keyword);</code></pre>
 <!-- ==================================================== -->
 
 <h3>Solution 4</h3>
-<ul>   
-   <li>Extend ListActivity instead of Activity</li>
-   <li>Remove the code in onCreate</li>
-   <li>Set the adapter with some data</li>
-</ul>
-<pre><code>List values = Arrays.asList("item 1","item 2","item 3");
-ArrayAdapter adapter = new ArrayAdapter(this,
+<p>Extend ListActivity instead of Activity, change onCreate and set the adapter with some data</p>
+<pre><code>List&lt;String&gt; values = Arrays.asList("item 1","item 2","item 3");
+ArrayAdapter&lt;String&gt; adapter = new ArrayAdapter&lt;String&gt;(this,
 R.layout.search_result_item, R.id.title, values);
 setListAdapter(adapter);</code></pre>
+<p>Modify search_result_activity.xml layout with ListView</p>
+<pre><code>&lt;ListView
+  android:id="@+android:id/list"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content" /&gt;
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
 <h3>Solution 4</h3>
-<ul>   
-   <li>Modify search_result_activity.xml layout with ListView and id = @+android:id/list</li>
-   <li>Create the search_result_item.xml</li>
-</ul>
+<p>Create search_result_item.xml</p>   
 <pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;LinearLayout xmlns:android=
     "http://schemas.android.com/apk/res/android"
@@ -181,7 +198,7 @@ setListAdapter(adapter);</code></pre>
 <ul>   
    <li>Create a content provider</li>
    <li>Add some log in the implementation of crud operations</li>
-   <li>Call query from the SearchResultActivity</li>
+   <li>Get a cursor from the SearchResultActivity</li>
 </ul>
 
 <!-- ==================================================== -->
@@ -189,12 +206,8 @@ setListAdapter(adapter);</code></pre>
 <!-- ==================================================== -->
 
 <h3>Solution 5</h3>
-<ul>   
-   <li>Create a class that extends ContentProvider</li>
-   <li>Implements all the methods necessary</li>
-</ul>
-<pre><code>private static final String TAG = "AppInAday";
-@Override
+<p>Create SearchProvider that extends ContentProvider and implements all the methods</p>
+<pre><code>@Override
 public int delete(Uri arg0, String arg1, String[] arg2) {
   Log.v(TAG, "delete");
   return 0;
@@ -238,15 +251,14 @@ public int update(Uri uri, ContentValues values, String selection,
 <!-- ==================================================== -->
 
 <h3>Solution 5</h3>
-<ul>   
-   <li>Declare the provider in the manifest</li>
-</ul>
-<pre><code>&lt;provider android:name=".SearchResultProvider" 
-android:authorities="com.novoda.traning.appinaday" /&gt;
+<p>Declare the provider in the manifest</p>
+<pre><code>&lt;provider android:name=".SearchProvider" 
+android:authorities="com.novoda.appinaday" /&gt;
 </code></pre>
-<ul>   
-   <li>Make a query in the SearchResultActivity</li>
-</ul>
+<p>Make a query in the SearchResultActivity and verify logs</p>
+<pre><code>Uri uri = Uri.parse("content://com.novoda.appinaday/results");
+getContentResolver().query(uri, null, null, null, null);
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -265,10 +277,7 @@ android:authorities="com.novoda.traning.appinaday" /&gt;
 <!-- ==================================================== -->
 
 <h3>Solution 6</h3>
-<ul>   
-  <li>Create a new class DatabaseHelper and extend SQLiteOpenHelper</li>
-  <li>Set a database and version</li>
-</ul>
+<p>Create a new class DatabaseHelper and extend SQLiteOpenHelper with version and name</p>
 <pre><code>private static final String DATABASE_NAME = "appinaday.db";
 private static final int DATABASE_VERSION = 1;
   
@@ -281,11 +290,9 @@ public DatabaseHelper(Context context) {
 <!-- ==================================================== -->
 
 <h3>Solution 6</h3>
-<ul>   
-  <li>Implement the onCreate method and create the table and import some data</li>
-</ul>
-<pre><code>db.execSQL("CREATE TABLE results 
-  (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)");
+<p>Implement the onCreate method and create the table and import some data</p>
+<pre><code>db.execSQL("CREATE TABLE results" + 
+  " (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)");
 db.execSQL("INSERT INTO results (title) VALUES (\"title 1\")");
 db.execSQL("INSERT INTO results (title) VALUES (\"title 2\")");
 db.execSQL("INSERT INTO results (title) VALUES (\"title 3\")");
@@ -296,9 +303,7 @@ db.execSQL("INSERT INTO results (title) VALUES (\"title 3\")");
 <!-- ==================================================== -->
 
 <h3>Solution 6</h3>
-<ul>   
-  <li>Add implementation of query to the content provider</li>
-</ul>
+<p>Add implementation of query to the content provider</p>
 <pre><code>private DatabaseHelper databaseHelper;
 @Override
 public boolean onCreate() {
@@ -318,11 +323,9 @@ public Cursor query(Uri uri, String[] projection, String selection,
 <!-- ==================================================== -->
 
 <h3>Solution 6</h3>
-<ul>   
-  <li>Use the cursor to provide results in the SearchResultActivity</li>
-</ul>
+<p>Use the cursor to provide results in the SearchResultActivity</p>
 <pre><code>Uri uri = Uri.parse(
-  "content://com.novoda.traning.appinaday/results");
+  "content://com.novoda.appinaday/results");
 Cursor c = getContentResolver().query(uri, null, null, null, null);
 List&lt;String&gt; values = new ArrayList&lt;String&gt;();
 while (c.moveToNext()){
@@ -335,13 +338,21 @@ c.close();
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Solution 6 - Notes</h3>
-<ul>   
-  <li>CursorAdapter instead of ArrayAdapter</li>
-</ul>
+<h3>Solution 6</h3>
+<p>SimpleCursorAdapter instead of ArrayAdapter</p>
+<pre><code>private static final String[] FROM = new String[] { "title" };
+private static final int[] TO = new int[] { R.id.title };
 
-<!-- ==================================================== -->
-</article>
+@Override
+public void onCreate(Bundle savedInstanceState) {
+  super.onCreate(savedInstanceState);
+  setContentView(R.layout.search_result_activity);
+
+  Uri uri = Uri.parse("content://com.novoda.appinaday/results");
+  Cursor c = getContentResolver().query(uri, null, null, null, null);
+  setListAdapter(new SimpleCursorAdapter(this, 
+    R.layout.search_result_item, c, FROM, TO));
+}</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -358,10 +369,7 @@ c.close();
 <!-- ==================================================== -->
 
 <h3>Solution 7</h3>
-<ul>   
-  <li>Create a new class and extend SearchService</li>
-  <li>Add constructors and log the keyword</li>
-</ul>
+<p>Create a new class and extend SearchService and log the keyword</p>
 <pre><code>public SearchService() {
   this("SearchService");
 }
@@ -383,12 +391,13 @@ protected void onHandleIntent(Intent intent) {
 <!-- ==================================================== -->
 
 <h3>Solution 7</h3>
-<ul>   
-  <li>Declare the service in the manifest</li>
-</ul>
+<p>We need an action for the service</p>
+<pre><code>public static final String SEARCH_ACTION = 
+  "com.novoda.appinaday.Search";</code></pre>
+<p>Declare the service in the manifest</p>
 <pre><code>&lt;service android:exported="true" android:name=".SearchService"&gt;
   &lt;intent-filter&gt;
-    &lt;action android:name="com.novoda.traning.appinaday.Search"/&gt;
+    &lt;action android:name="com.novoda.appinaday.Search"/&gt;
   &lt;/intent-filter&gt;
 &lt;/service&gt;
 </code></pre>
@@ -398,56 +407,21 @@ protected void onHandleIntent(Intent intent) {
 <!-- ==================================================== -->
 
 <h3>Solution 7</h3>
-<ul>   
-  <li>Add startService in the onResume of SearchResultActivity</li>
-  <li>Run and check the logs</li>
-</ul>
-<pre><code>Intent i = new Intent(SearchService.ACTION);
-i.putExtra("keyword", editText.getText().toString());
-startService(i);
-</code></pre>
-
-<!-- ==================================================== -->
-</article><!-- slide separator--><article>
-<!-- ==================================================== -->
-
-<h3>Solution 7</h3>
-<ul>   
-  <li>Send the broadcast from the service to inform the activity that the service has finished</li>
-</ul>
-<pre><code>sendBroadcast(intent);</code></pre>
-<ul>   
-  <li>Create a broadcast receiver in the SearchResultActivity</li>
-</ul>
-<pre><code>private BroadcastReceiver serchCompletedReceiver 
-    = new BroadcastReceiver() {
-  @Override
-  public void onReceive(Context paramContext, Intent paramIntent) {
-    Log.v("AppInADay", "onReceiver ");
-  }
-};</code></pre>
-
-<!-- ==================================================== -->
-</article><!-- slide separator--><article>
-<!-- ==================================================== -->
-
-<h3>Solution 7</h3>
-<ul>   
-  <li>Register the receiver in the SearchResultActivity</li>
-</ul>
+<p>Change a bit SearchResultActivity to call the service</p>
 <pre><code>@Override
 protected void onResume() {
   super.onResume();
-  registerReceiver(serchCompletedReceiver,
-	SearchService.SEARCH_END_FILTER);
-  
-  //...start the service
+  String keyword = getIntent().getStringExtra("keyword");
+  Intent i = new Intent(SearchService.SEARCH_ACTION);
+  i.putExtra("keyword", keyword);
+  startService(i);
+  //update();
 }
 
-@Override
-protected void onPause() {
-  unregisterReceiver(serchCompletedReceiver);
-  super.onPause();
+private void update() {
+  Uri uri = Uri.parse("content://com.novoda.appinaday/results");
+  Cursor c = getContentResolver().query(uri, null, null, null, null);
+  setListAdapter(new SimpleCursorAdapter(this, R.layout.search_result_item, c, FROM, TO));
 }
 </code></pre>
 
@@ -456,17 +430,52 @@ protected void onPause() {
 <!-- ==================================================== -->
 
 <h3>Solution 7</h3>
-<ul>  
-  <li>Extract the and update method from the code of onCreate</li> 
-  <li>Update the list content from the receiver</li>
-</ul>
-<pre><code>private BroadcastReceiver serchCompletedReceiver = new BroadcastReceiver() {
+<p>Run and check that the service runs and print the logs before implementing the next step</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 7</h3>
+<p>Send the broadcast from the service to inform the activity that the service has finished</p>
+<pre><code>public static final String END_SEARCH_ACTION 
+  = "com.novoda.appinaday.EndSearch";
+//...
+Intent broadcastIntent = new Intent(END_SEARCH_ACTION);
+sendBroadcast(broadcastIntent);
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 7</h3>
+<p>Create a broadcast receiver in the SearchResultActivity</p>
+<pre><code>private BroadcastReceiver serchCompletedReceiver 
+    = new BroadcastReceiver() {
   @Override
-  public void onReceive(Context paramContext, Intent paramIntent) {
-  	Log.v("AppInADay", "onReceiver ");
-  	update();
+  public void onReceive(Context paramContext, 
+    Intent paramIntent) {
+    update();
   }
-};
+};</code></pre>
+<p>Note the update in onReceive</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 7</h3>
+<p>Register the receiver in the SearchResultActivity</p>
+<pre><code>@Override
+protected void onResume() {
+  super.onResume();
+  IntentFilter filter = new IntentFilter(
+    SearchService.END_SEARCH_ACTION);
+  registerReceiver(serchCompletedReceiver, filter);
+  
+  //...start the service
+}
 
 @Override
 protected void onPause() {
@@ -492,22 +501,32 @@ protected void onPause() {
 <!-- ==================================================== -->
 
 <h3>Solution 8</h3>
-<ul>  
-  <li>Add http call in the intent service with HttpClient</li>
-  <li>Log the content</li>
-</ul>
-<pre><code>String url = "http://ajax.googleapis.com/ajax/services" + 
-    "/search/web?v=1.0&rsz=8&q=" + keyword;
-HttpClient client = new DefaultHttpClient();
-HttpGet httpGet = new HttpGet(url);
-HttpResponse response = client.execute(httpGet);
-StatusLine statusLine = response.getStatusLine();
-int statusCode = statusLine.getStatusCode();
-if (statusCode == 200) {
-  HttpEntity entity = response.getEntity();
-  Log.v("appinaday", EntityUtils.toString(entity));
-}
+<p>Add http call in the SearchService with HttpClient</p>
+<pre><code>private void callGoogleSearch(String keyword) {
+  try {
+    String url = "http://ajax.googleapis.com/ajax/services"
+      + "/search/web?v=1.0&rsz=8&q=" + keyword;
+    HttpClient client = new DefaultHttpClient();
+    HttpGet httpGet = new HttpGet(url);
+    HttpResponse response = client.execute(httpGet);
+    StatusLine statusLine = response.getStatusLine();
+    int statusCode = statusLine.getStatusCode();
+    if (statusCode == 200) {
+      HttpEntity entity = response.getEntity();
+      Log.v("SearchService", EntityUtils.toString(entity));
+    }
+  } catch (Exception e) {
+  	throw new RuntimeException(e.getMessage());
+  }}
 </code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 8</h3>
+<p>Add INTERNET permission</p>
+<pre><code>&lt;uses-permission android:name="android.permission.INTERNET" /&gt;</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -524,11 +543,45 @@ if (statusCode == 200) {
 <!-- ==================================================== -->
 
 <h3>Solution 9</h3>
-<ul>  
-  <li>Add <a href="resources/gson-1.7.1.jar">gson jar</a> to the project libs and add it to the classpath</li>
-  <li>Pass the input stream to a parse method</li>
-  <li>Navigate through the json until the result array</li>
-</ul>
+<p>Add <a href="resources/gson-1.7.1.jar">gson jar</a> to the project libs and add it to the classpath</p>
+<p>Prepare a stream and pass it to a parsing method</p>
+<pre><code>...
+if (statusCode == 200) {
+  HttpEntity entity = response.getEntity();
+  
+  InputStream content = entity.getContent();
+      InputStreamReader stream = new InputStreamReader(content);
+  parse(stream);
+...</code></pre>
+<p>Remember to remove the Log of the entity content as it can be consumed only once!</p>
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 9</h3>
+<p>Considering the json</p>
+<pre><code>{
+  responseData: {
+    results: [
+      {
+        GsearchResultClass: "GwebSearch",
+        unescapedUrl: "http://test.com/",
+        url: "http://test.com/",
+        visibleUrl: "test.com",
+        cacheUrl: "http://www.google.com/s...",
+        title: "<b>Test</b>.com Web Based ...",
+        titleNoFormatting: "Test.com Web Base...",
+        content: "Easily Author and Administe.."
+      },
+  ...
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 9</h3>
+<p>Navigate through the json until the result array</p>
 <pre><code>JsonReader reader = new JsonReader(stream);
 reader.beginObject();
 reader.nextName();
@@ -543,9 +596,7 @@ JsonToken token = reader.peek();
 <!-- ==================================================== -->
 
 <h3>Solution 9</h3>
-<ul>  
-  <li>Iterate and log all the titles</li>
-</ul>
+<p>Iterate and log all the titles</p>
 <pre><code>while (token != JsonToken.END_ARRAY
     && token != JsonToken.END_DOCUMENT) {
   if (token == JsonToken.BEGIN_OBJECT) {
@@ -579,12 +630,12 @@ JsonToken token = reader.peek();
 <!-- ==================================================== -->
 
 <h3>Solution 10</h3>
-<ul><li>Clean the result table before starting a new search</li></ul>
+<p>Clean the result table before starting a new search</p>
 <pre><code>Uri uri = Uri.parse(
-  "content://com.novoda.traning.appinaday/results");
+  "content://com.novoda.appinaday/results");
 getContentResolver().delete(uri, null, null);
 </code></pre>
-<ul><li>Implement the delete method in the provider</li></ul>
+<p>Implement the delete method in the provider</p>
 <pre><code>@Override
 public int delete(Uri uri, String where, String[] selectionArgs) {
   return databaseHelper.getWritableDatabase().delete("results", 
@@ -597,13 +648,13 @@ public int delete(Uri uri, String where, String[] selectionArgs) {
 <!-- ==================================================== -->
 
 <h3>Solution 10</h3>
-<ul><li>Add the insert during the parsing of the results</li></ul>
-<pre><code>Uri uri = Uri.parse("content://com.novoda.traning.appinaday/results");
+<p>Add the insert during the parsing of the results</p>
+<pre><code>Uri uri = Uri.parse("content://com.novoda.appinaday/results");
 ContentValues cv = new ContentValues(1);
 cv.put("title", reader.nextString());
 getContentResolver().insert(uri, cv);
 </code></pre>
-<ul><li>Implement the insert method in the provider</li></ul>
+<p>Implement the insert method in the provider</p>
 <pre><code>@Override
 public Uri insert(Uri uri, ContentValues values) {
   long id = databaseHelper.getWritableDatabase().insert(
