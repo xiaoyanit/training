@@ -3,7 +3,7 @@
   <head>
     <title>Android training - app in a day</title>
     <meta charset='utf-8'>
-    <script src='res/slides.js'></script>
+    <script src='../res/slides.js'></script>
   </head>
   <body style='display: none'>
     <section class='slides layout-regular template-default'>
@@ -335,7 +335,7 @@ c.close();
 <h3>Exercise 7</h3>
 <ul>   
    <li>Create an IntentService and run it before calling on search submit</li>
-   <li></li>
+   <li>Load the results in the list activity only when the service send back broadcast</li>
 </ul>
 
 <!-- ==================================================== -->
@@ -344,7 +344,130 @@ c.close();
 
 <h3>Solution 7</h3>
 <ul>   
-  <li></li>
+  <li>Create a new class and extend SearchService</li>
+  <li>Add constructors and log the keyword</li>
+</ul>
+<pre><code>public SearchService() {
+  this("SearchService");
+}
+public SearchService(String name) {
+  super(name);
+}
+@Override
+protected void onHandleIntent(Intent intent) {
+  String keyword = intent.getStringExtra("keyword");
+  if (TextUtils.isEmpty(keyword)) {
+    return;
+  }  
+  Log.v("AppInADay", "Search for : " + keyword);    
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 7</h3>
+<ul>   
+  <li>Declare the service in the manifest</li>
+</ul>
+<pre><code>&lt;service android:exported="true" android:name=".SearchService"&gt;
+  &lt;intent-filter&gt;
+    &lt;action android:name="com.novoda.traning.appinaday.Search"/&gt;
+  &lt;/intent-filter&gt;
+&lt;/service&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 7</h3>
+<ul>   
+  <li>Add startService in the onResume of SearchResultActivity</li>
+  <li>Run and check the logs</li>
+</ul>
+<pre><code>Intent i = new Intent(SearchService.ACTION);
+i.putExtra("keyword", editText.getText().toString());
+startService(i);
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 7</h3>
+<ul>   
+  <li>Send the broadcast from the service to inform the activity that the service has finished</li>
+</ul>
+<pre><code>sendBroadcast(intent);</code></pre>
+<ul>   
+  <li>Create a broadcast receiver in the SearchResultActivity</li>
+</ul>
+<pre><code>private BroadcastReceiver serchCompletedReceiver 
+    = new BroadcastReceiver() {
+  @Override
+  public void onReceive(Context paramContext, Intent paramIntent) {
+    Log.v("AppInADay", "onReceiver ");
+  }
+};</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 7</h3>
+<ul>   
+  <li>Register the receiver in the SearchResultActivity</li>
+</ul>
+<pre><code>@Override
+protected void onResume() {
+  super.onResume();
+  registerReceiver(serchCompletedReceiver,
+	SearchService.SEARCH_END_FILTER);
+  
+  //...start the service
+}
+
+@Override
+protected void onPause() {
+  unregisterReceiver(serchCompletedReceiver);
+  super.onPause();
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 7</h3>
+<ul>  
+  <li>Extract the and update method from the code of onCreate</li> 
+  <li>Update the list content from the receiver</li>
+</ul>
+<pre><code>private BroadcastReceiver serchCompletedReceiver = new BroadcastReceiver() {
+  @Override
+  public void onReceive(Context paramContext, Intent paramIntent) {
+  	Log.v("AppInADay", "onReceiver ");
+  	update();
+  }
+};
+
+@Override
+protected void onPause() {
+  unregisterReceiver(serchCompletedReceiver);
+  super.onPause();
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 8</h3>
+<ul>   
+   <li>Execute http call to get the result</li>
+   <li>insert the list of the content in the database</li>
 </ul>
 
 <!-- ==================================================== -->
