@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Basic widgets</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Basic widgets</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Widgets?</h3>
+<ul>
+  <p>View object interface for user interaction</p>
+  <br>
+  <p>Android provides a set of fully implemented widgets:</p>
+  <br>
+  <li>Buttons</li>
+  <li>Checkboxes</li>
+  <li>Text entry fields</li>
+  <li>... and many more!</li>
+  <br>
+  <p>You can also create your own by extending or combining existing widgets</p>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Main widgets</h3>
+<br>
+<ul>
+  <li>TextView</li>
+  <li>EditText</li>
+  <li>ImageView</li>
+  <li>Button</li>
+  <li>RadioButton</li>
+  <li>ImageButton</li>
+  <li>CheckBox</li>
+  <li>ProgressBar</li>
+</ul>
+		
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Where and how to declare widgets?</h3>
+<ul>
+  <p>Most common way - in xml</p>
+  <pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+  
+&lt;LinearLayout 
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" 
+  android:layout_height="fill_parent" &gt;
+              
+  &lt;TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello, I am a TextView" /&gt;
+            
+  &lt;Button android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Hello, I am a Button" /&gt;
+            
+&lt;/LinearLayout&gt;
+</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Where and how to declare widgets?</h3>
+<ul>
+  <p>Also possible in Java code</p>
+  <pre><code>   @Override
+   public void onCreate(Bundle savedInstanceState) {
+       super.onCreate(savedInstanceState);
+       
+       TextView hello = new TextView(this);
+       
+       hello.setText("Hello, Android");
+       
+       setContentView(hello);
+   }
+</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Attributes</h3>
+<ul>
+  <p>Allow you to configure a widget's properties</p>
+  <br>
+  <p>Defined inside a widget's tag as:</p>
+  <pre><code>android:<i>attribute_name</i>="<i>attribute_value</i>"</code></pre>
+  <p>where "android" is the namespace defined in the first tag of the file:</p>
+  <pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+  
+  ...</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Attributes</h3>
+<ul>
+  <p>Some attributes are specific to a View object but inherited by its children</p> 
+  <p>Main attributes:</p>
+  <pre><code>android:id
+
+android:layout_<i>something</i>
+
+android:padding
+
+android:text</code></pre>
+  <p>But there are many more - and you can create your own!</p>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Input events</h3>
+<ul>
+  <p>User's interaction with your application</p>
+  <p>Captured through <b>Event Listeners:</b></p>
+  <br>
+  <li>onClick()</li>
+  <li>onLongClick()</li>
+  <li>onFocusChange()</li>
+  <li>onKey()</li>
+  <li>onTouch()</li>
+  <li>onCreateContextMenu()</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to catch input events - in Java</h3>
+<ul>
+  <p>Implement an interface of the input event type</p>
+  <pre><code>private final OnClickListener buttonListener = new OnClickListener() {
+    @Override
+    public void onClick(View v) {
+      // do something when the button is clicked
+    }
+};</code></pre>
+  <p>Set that object in a view</p>
+<code><pre>@Override
+protected void onCreate(Bundle savedValues) {
+    ...
+    Button button = new Button();
+    button.setOnClickListener(buttonListener);
+    ...
+}</code></pre>
+</ul>
+
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
