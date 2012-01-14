@@ -6,12 +6,16 @@ function talk(page) {
 	window.open('talk/' + page + ".html", "_self", false);
 }
 
-function exercise(page) {
-	if (page === "?") {
+function exercise(name, page) {
+	if (name === "?") {
 		alert("exercise not ready");
 		return;
 	}
-	window.open('exercise/' + page + ".html", "_self", false);
+	var resource = 'exercise/' + name + ".html";
+	if(page) {
+		resource = resource + "#" + page;
+	}
+	window.open(resource, "_self", false);
 }
 
 function training(page) {
