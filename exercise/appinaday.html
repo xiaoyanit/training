@@ -467,8 +467,149 @@ protected void onPause() {
 <h3>Exercise 8</h3>
 <ul>   
    <li>Execute http call to get the result</li>
-   <li>insert the list of the content in the database</li>
+   <li>Log all the parsed titles of the 
+       http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=8&q=test</li>
+   <li>Use the correct keyword coming from the DashboardActivity</li>
 </ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 8</h3>
+<ul>  
+  <li>Add http call in the intent service with HttpClient</li>
+  <li>Log the content</li>
+</ul>
+<pre><code>String url = "http://ajax.googleapis.com/ajax/services" + 
+    "/search/web?v=1.0&rsz=8&q=" + keyword;
+HttpClient client = new DefaultHttpClient();
+HttpGet httpGet = new HttpGet(url);
+HttpResponse response = client.execute(httpGet);
+StatusLine statusLine = response.getStatusLine();
+int statusCode = statusLine.getStatusCode();
+if (statusCode == 200) {
+  HttpEntity entity = response.getEntity();
+  Log.v("appinaday", EntityUtils.toString(entity));
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 9</h3>
+<ul>   
+   <li>Parsed the response of the server to extract titles</li>
+   <li>Log all the titles</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 9</h3>
+<ul>  
+  <li>Add <a href="resources/gson-1.7.1.jar">gson jar</a> to the project libs and add it to the classpath</li>
+  <li>Pass the input stream to a parse method</li>
+  <li>Navigate through the json until the result array</li>
+</ul>
+<pre><code>JsonReader reader = new JsonReader(stream);
+reader.beginObject();
+reader.nextName();
+reader.beginObject();
+reader.nextName();
+reader.beginArray();
+JsonToken token = reader.peek();
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 9</h3>
+<ul>  
+  <li>Iterate and log all the titles</li>
+</ul>
+<pre><code>while (token != JsonToken.END_ARRAY
+    && token != JsonToken.END_DOCUMENT) {
+  if (token == JsonToken.BEGIN_OBJECT) {
+    reader.beginObject();
+  } else if (token == JsonToken.NAME) {
+    String name = reader.nextName();
+    if ("title".equals(name)) {
+      Log.v("AppInADay", reader.nextString());
+    } else {
+      reader.skipValue();
+    }
+  } else if (token == JsonToken.END_OBJECT) {
+    reader.endObject();
+  }
+  token = reader.peek();
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 10</h3>
+<ul>   
+   <li>Clean up the database of old results</li>
+   <li>Insert all the new results</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 10</h3>
+<ul><li>Clean the result table before starting a new search</li></ul>
+<pre><code>Uri uri = Uri.parse(
+  "content://com.novoda.traning.appinaday/results");
+getContentResolver().delete(uri, null, null);
+</code></pre>
+<ul><li>Implement the delete method in the provider</li></ul>
+<pre><code>@Override
+public int delete(Uri uri, String where, String[] selectionArgs) {
+  return databaseHelper.getWritableDatabase().delete("results", 
+	where, selectionArgs);
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 10</h3>
+<ul><li>Add the insert during the parsing of the results</li></ul>
+<pre><code>Uri uri = Uri.parse("content://com.novoda.traning.appinaday/results");
+ContentValues cv = new ContentValues(1);
+cv.put("title", reader.nextString());
+getContentResolver().insert(uri, cv);
+</code></pre>
+<ul><li>Implement the insert method in the provider</li></ul>
+<pre><code>@Override
+public Uri insert(Uri uri, ContentValues values) {
+  long id = databaseHelper.getWritableDatabase().insert(
+    "results", null ,values);
+  return Uri.withAppendedPath(uri, "" + id);
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 11</h3>
+<ul>   
+   <li>Have just one activity</li>
+   <li>Add history of the search keywords</li>
+   <li>Add styles</li>
+   <li>Add links</li>
+   <li>Open the browser with the url when pressing an item</li>
+</ul>
+
 
 <!-- ==================================================== -->
 </article>
