@@ -52,14 +52,29 @@
 <!-- ==================================================== -->
 
 <h3>Solution 2</h3>
-<ul>
-  <li>In main layout add EditText with id keyword</li>
-  <li>In main layout add Button with id submit</li>
-  <li>Change the string to search</li>
-  <li>Add the click listener in the DashboardActivity and log the content of keyword</li>
-</ul>
+<ul><li>In main layout add EditText with id keyword</li></ul>
+<pre><code>&lt;EditText android:id="@+id/keyword"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content" /&gt;
+</code></pre>
+<ul><li>In main layout add Button with id submit</li></ul>
+<pre><code>&lt;Button
+  android:id="@+id/submit"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content" 
+  android:text="@string/search"/&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<ul><li>Change the string to search</li></ul>
+<pre><code>&lt;string name="search"&gt;Search&lt;/string&gt;</code></pre>
+<ul><li>Add the click listener in the DashboardActivity and log the content of keyword</li></ul>
 <pre><code>final EditText editText = (EditText)findViewById(R.id.keyword);
-  Button submit = (Button)findViewById(R.id.submitsearch);
+  Button submit = (Button)findViewById(R.id.submit);
   submit.setOnClickListener(new OnClickListener() {
   public void onClick(View v) {
     Log.v("AppInADay", "keyword to search for is : " 
