@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Lists!</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Lists!</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Lists!</h3>
+<br>
+<ul>
+  <p>A very common way of displaying data</p>
+  <br>
+  <p>ListView and ListActivity are here to help!</p>
+  <br>
+  <br>
+  <li>ListView - widget configured to display data in rows</li>
+  <br>
+  <li>ListActivity - child of Activity with helper methods that interact with a ListView</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>What do we need:</h3>
+<br>
+<ul>
+  <li>A <b>Layout</b> with a <b>ListView</b></li>
+  <br>
+  <li>A <b>Layout</b> with a <b>TextView</b> for the rows</li>
+  <br>
+  <li>A <b>ListActivity</b> to hold the layout</li>
+  <br>
+  <li><b>Data</b> for the list</li>
+  <br>
+  <li>An <b>Adaptor</b> to bind the data to the list</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Layout with a ListView</h3>
+<br>
+<ul>
+  <p>res/layout/act_my_list.xml</p>
+  <pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ListView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@android:id/list"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" /&gt;
+</code></pre>
+  <p>Important! id must be <b>@android:id/list</b> to use with <b>ListActivity</b> and its helper methods</p>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Layout for the rows</h3>
+<br>
+<ul>
+  <p>res/layout/list_item.xml</p>
+  <pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:padding="10dp"
+    android:textSize="20sp"/&gt;
+</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>ListActivity</h3>
+<br>
+<ul>
+<br>
+  <pre><code>public class MyList extends ListActivity {
+    
+}
+</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Data for the list</h3>
+<br>
+<ul>
+  <p>Various data structures can be used to provide data</p>
+  <br>
+  <li>Arrays</li>
+  <li>Lists</li>
+  <li>Cursors</li>
+  <br>
+  <p>Lets use a simple array:</p>
+  <pre><code>String[] primaryColors = {"Red","Blue","Yellow"};
+</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>The Adaptor</h3>
+<ul>
+  <p>Adapters make rows out of data structures</p>
+  <br>
+  <li>Wraps a source of model data (static array, database query, etc.)</li>
+  <li>Turn each model into a View, puts in list, etc.</li>
+  <pre><code>@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+    
+    ArrayAdapter&lt;String&gt; adapter = new ArrayAdapter&lt;String&gt;(this, 
+                            R.layout.list_item, primaryColors);
+                            
+    setListAdapter(adapter);
+}
+</code></pre>
+</ul>
+
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
