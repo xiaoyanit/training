@@ -23,6 +23,7 @@
   <li>make it accessible to other</li>
   <li>abstract data layer</li>  
   <li>you just need to know the uri</li>
+  <li>focus on implementing the api android handles the rest</li>
 </ul>
 
 <!-- ==================================================== -->
@@ -87,7 +88,7 @@ android:authorities="com.novoda.appinaday" /&gt;
 <ul>
   <li>openFile</li> 
   <li>openAssetFile</li>
-  <li>...</li>
+  <li>bulkInsert ...</li>
 </ul>
 
 <!-- ==================================================== -->
@@ -235,10 +236,32 @@ public String getType(Uri url){
 
 @Override
 public boolean onCreate() {
-  databaseHelper = new DatabaseHelper(getContext());
-  return false;
+  db = new DatabaseHelper(getContext()).getWritableDatabase();
+  if(db == null) {
+    return false;
+  }
+  return true;
 }
 </code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Notify on change</h3>
+<p>The provider can notify if there is a change in the data</p>
+<pre><code>getContext().getContentResolver().notifyChange(uri, null);
+</code></pre>
+<p>In the activity that need to listen to changes instead add this</p>
+<pre><code>getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+  @Override
+  public void onChange(boolean selfChange) {
+    // TODO Auto-generated method stub
+    super.onChange(selfChange);
+  }
+});
+</code></pre>
+<p>remember to unregister the contentObserver!</p>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -247,6 +270,7 @@ public boolean onCreate() {
 <h3>Notes</h3>
 <ul>
   <li>Single point where all the data request are passing so you can implement a security layer</li>
+  <li>Add <span class="red">android:exported=“false”</span> unless you want it exposed</li>
 </ul>
 
 <!-- ==================================================== -->
