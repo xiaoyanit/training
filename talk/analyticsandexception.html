@@ -19,7 +19,7 @@
 
 <h3>Analytics</h3>
 <ul>
-  <li>It is important to know what are the user doing with your app</li>
+  <li>It is important to know what how the app is used</li>
   <li>Track with analytics activities, buttons or any other event</li>
   <li>Track silent exceptions</li>
   <li>There are lots of libraries : Google Analytics, WebTrends, Flurry ...</li>
@@ -33,7 +33,7 @@
 <ul>
   <li>Very stable implementation</li>
   <li>It is the most used</li>
-  <li>Has an api that is too web-driven but is simple</li>
+  <li>The api is more for the web but is simple</li>
   <li>The api is not polluted with to many methods like webtrends</li>
   <li>Google analytics expose the data collected with apis</li>
   <li>You can track installation with the market</li>
@@ -53,8 +53,7 @@ tracker.stopSession();
 tracker.trackPageView("/someActivity");
 
 //Tracking events
-tracker.trackEvent(BUTTON_CATEGORY, CLICK_ACTION, 
-  label, position);
+tracker.trackEvent(category, action, label, position);
 </code></pre>
 
 <!-- ==================================================== -->
@@ -63,9 +62,10 @@ tracker.trackEvent(BUTTON_CATEGORY, CLICK_ACTION,
 
 <h3>Exceptions</h3>
 <ul>
-  <li>The Android Market is not a good tool to track exception as only a small percentage is reported</li>
-  <li>It is difficult to manage history on different version of the reported issue on the market</li>
-  <li>Use something else Bugsense or Acra</li>
+  <li>The Android Market is not a good tool to track exception</li>
+  <li>Only a small percentage is reported</li>
+  <li>It is difficult to manage history on different version of the reported issues</li>
+  <li>Use something else like Bugsense or Acra</li>
 </ul>
    
 <!-- ==================================================== -->
@@ -74,7 +74,8 @@ tracker.trackEvent(BUTTON_CATEGORY, CLICK_ACTION,
 
 <h3>Acra</h3>
 <ul>
-  <li>ACRA is a library enabling Android Application to automatically post their crash reports to a GoogleDoc form</li>
+  <li>ACRA is a library enabling Android Application to automatically 
+    post their crash reports to a GoogleDoc form</li>
   <li>Easy implementation</li>
   <li>Very flexible but need a better user interface to handle the exceptions</li>
 </ul>
@@ -86,8 +87,8 @@ tracker.trackEvent(BUTTON_CATEGORY, CLICK_ACTION,
 
 <h3>Bugsense</h3>
 <ul>
-  <li>~acra</li>
-  <li>But very nice ui to handle the exceptions</li>
+  <li>Similar to acra</li>
+  <li>Very nice ui to handle the exceptions</li>
   <li>You can redirect acra logs to bugsense</li>
 </ul>
 <img src="../image/bugsense.png" />
