@@ -534,7 +534,7 @@ protected void onPause() {
 
 <h3>Exercise 9</h3>
 <ul>   
-   <li>Parsed the response of the server to extract titles</li>
+   <li>Parse the response of the server to extract titles</li>
    <li>Log all the titles</li>
 </ul>
 
@@ -668,7 +668,150 @@ public Uri insert(Uri uri, ContentValues values) {
 <!-- ==================================================== -->
 
 <h3>Exercise 11</h3>
-<p>Make the app better</p>
+<ul>
+	<p style="padding-bottom: 20px;">Style the list rows:</p>
+	<li>Set the height of the row to be 48dp</li>
+	<li>Increase the text size (hint: the units are in sp - eg: 14sp)</li>
+	<li>Align the text left and center (hint you can OR them)</li>
+	<li>Add padding of 10dp</li>
+	<li>Add ellipsize at the end of the text (hint - you'll need to limit the text to one line)</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 11</h3>
+<p>Style the list rows</p>
+<img src="../image/solution-11.png" height="85%" style="padding-top:20px;"/>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 11</h3>
+<p>Style the list rows</p>
+<pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android=
+    "http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="48dp" &gt;
+  &lt;TextView
+    android:id="@+id/title"
+    android:gravity="left|center"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textSize="18sp"
+    android:padding="10dp"
+    android:ellipsize="end"
+    android:lines="1" &gt;
+  &lt;/TextView&gt;
+&lt;/LinearLayout&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 12</h3>
+<ul>
+	<li>Set your app's theme to Light with NoTitleBar</li>
+	<li>Create your own theme, set the Light NoTitleBar as its parent and set it as your app's theme</li>
+	<li>Add two items to your theme: <b>android:layout_width</b> and <b>android:layout_height</b> both with <b>wrap_content</b> as their values</li>
+	<li>Remove any attribute with wrap_content from your layouts</li>
+	<li>Create a new style called <b>Fill</b> and add two items to your theme: <b>android:layout_width</b> and <b>android:layout_height</b> both with <b>fill_content</b> as their values</li>
+	<li>Replace <b>android:layout_width</b> and <b>android:layout_height</b> from widgets with this new style</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 12</h3>
+<p>Set your app's theme to Light with NoTitleBar</p>
+<p>In AndroidManifest.xml:</p>
+<pre><code>&lt;application
+        ...
+        <b>android:theme="@android:style/Theme.Light.NoTitleBar"</b>&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 12</h3>
+<p>The AppInADay theme</p>
+<p>Create a new xml file in the res/values folder - eg: res/values/theme.xml - with the following</p>
+<pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;resources&gt;
+
+  &lt;style
+    name="Theme.AppInADay"
+    parent="@android:Theme.Light.NoTitleBar"&gt;
+    &lt;item name="android:layout_width"&gt;wrap_content&lt;/item&gt;
+    &lt;item name="android:layout_height"&gt;wrap_content&lt;/item&gt;
+  &lt;/style&gt;
+    
+&lt;/resources&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 12</h3>
+<p>Set your app's theme to Light with NoTitleBar</p>
+<pre><code>&lt;application
+        ...
+        android:theme="@style/Theme.AppInADay"&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 12</h3>
+<p>Remove any attribute with wrap_content from your layouts</p>
+<pre><code>&lt;ListView
+	  android:id="@+android:id/list"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content" /&gt;</code></pre>
+<p>Becomes:</p>
+<pre><code>&lt;ListView
+	  android:id="@+android:id/list"
+	  android:layout_width="fill_parent" /&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 12</h3>
+<p>New style - <b>Fill</b></p>
+<p>Add to the theme file:</p>
+<pre><code>  &lt;style name="Fill"&gt;
+    &lt;item name="android:layout_width"&gt;fill_parent&lt;/item&gt;
+    &lt;item name="android:layout_height"&gt;fill_parent&lt;/item&gt;
+  &lt;/style&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 12</h3>
+<p>Replace <b>android:layout_width</b> and <b>android:layout_height</b></p>
+<pre><code>&lt;LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"&gt;</code></pre>
+<p>Becomes:</p>
+<pre><code>&lt;LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Fill"
+    android:orientation="vertical" &gt;</code></pre>
+
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Homework - make the app better!!</h3>
 <ul>   
    <li>Have just one activity</li>
    <li>Add history of the search keywords</li>
