@@ -29,14 +29,46 @@
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
+<h3>Uri</h3>
+<ul>
+  <li>Uniform Resource Identifier <a href="http://www.faqs.org/rfcs/rfc2396.html">rfc2396</a></li>
+  <li><span class="red">&lt;scheme&gt;://&lt;authority&gt;&lt;path&gt;?&lt;query&gt;</span></li>
+  <li>provide a simple and extensible means for identifying a resource</li>
+</ul>
+
+<pre><code>//target all the cars
+content://com.your.authority/cars
+
+//select one specific car
+content://com.your.authority/cars/1
+
+//more complex stuff
+content://com.your.authority/cars/wheel/1
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Authorities</h3>
+<p>The authority is define in the declaration of the provider in the android manifest</p>
+
+<pre><code>&lt;provider android:name=".CustomProvider" 
+android:authorities="com.novoda.appinaday" /&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
 <h3>How to implement content providers</h3>
 <ul>
   <li>Create a class that extends ContentProvider</li>
   <li>Implements all the methods necessary</li>
   <li>Declare the provider in the manifest</li>
 </ul>
-<pre><code>&lt;provider android:name=".SearchResultProvider" 
-android:authorities="com.novoda.traning.appinaday" /&gt;
+<pre><code>&lt;provider android:name=".CustomProvider" 
+android:authorities="com.novoda.appinaday" /&gt;
 </code></pre>
 
 <!-- ==================================================== -->
@@ -44,36 +76,178 @@ android:authorities="com.novoda.traning.appinaday" /&gt;
 <!-- ==================================================== -->
 
 <h3>Content provider operations</h3>
+<p>CRUD operations</p>
+<ul>
+  <li>query</li> 
+  <li>insert</li>
+  <li>update</li> 
+  <li>delete</li>
+</ul>
+<p>And more</p>
+<ul>
+  <li>openFile</li> 
+  <li>openAssetFile</li>
+  <li>...</li>
+</ul>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Uri and UriMatcher</h3>
+<h3>ContentResolver</h3>
+<ul>
+  <li>all the providers implement the same interface</li>
+  <li>you can access them with a content resolver</li>
+</ul> 
+<pre><code>//Activities have already the method for you
+ContentResolver cr = getContentResolver();
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Authorities</h3>
+<h3>Query usage</h3>
+<p>making a query in activities is simple</p>
+<pre><code>ContentResolver cr = getContentResolver();
+cr.query(uri, projection, selection, selectionArgs, sortOrder);
+//make sure to close the cursor
+
+managedQuery(Uri uri, String[] projection, 
+  String selection, String[] selectionArgs, String sortOrder)
+//with managedQuery you don't need to close the cursor
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>How to use the content provider</h3>
+<h3>Query implementation</h3>
+<p>every query goes to the query method on the provider declared to manage a particular authority</p>
+<pre><code>@Override
+public Cursor query(Uri uri, String[] projection, 
+    String selection, String[] selectionArgs, 
+    String sortOrder) {
+  Log.v(TAG, "query");
+  return null;
+}
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Queries from main ui thread and stuff not to do</h3>
+<h3>Delete usage and implementation</h3>
+<pre><code>@Override
+Uri uri = Uri.parse(
+	"content://com.novoda.appinaday/results");
+getContentResolver().delete(uri, null, null);
+</code></pre>
+<pre><code>@Override
+public int delete(Uri uri, String where, String[] selectionArgs) {
+  return databaseHelper.getWritableDatabase().delete("results", 
+	where, selectionArgs);
+}
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Cursors and activities</h3>
+<h3>Insert usage and implementation</h3>
+<pre><code>Uri uri = Uri.parse("content://com.novoda.appinaday/results");
+ContentValues cv = new ContentValues(1);
+cv.put("title", reader.nextString());
+getContentResolver().insert(uri, cv);
+</code></pre>
+<pre><code>@Override
+public Uri insert(Uri uri, ContentValues values) {
+  long id = databaseHelper.getWritableDatabase().insert(
+    "results", null ,values);
+  return Uri.withAppendedPath(uri, "" + id);
+}
+</code></pre>
+<p>Update is similar</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Data types and MIME type</h3>
+<ul>
+  <li>For every pair authority/path you need a specific MIME type</li>
+  <li>You can use MINE type in intents</li>
+  <li>The content provider method getType() is responsible for the mapping from Uri to MIME</li>
+  <li>Two types of MIME single entity or a collection</li>
+</ul>
+<pre><code>//collection type
+vnd.android.cursor.dir/vnd.Y 
+//instance type
+vnd.android.cursor.item/vnd.Y 
+</code></pre>
+<p>Y : app.entity  or organization.entity</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>ContentProvider getType</h3>
+<p>We need to implement getType() that has to return the correct type for every uri</p>
+<pre><code>public String getType(Uri url) {
+  if(isEntityX(uri)) {
+    return "vnd.android.cursor.dir/person";
+  } ....
+}
+</code></pre>
+<p>to help out you can use the UriMatcher class</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>UriMatcher</h3>
+<pre><code>private static final int PEOPLE = 1;
+private static final int PEOPLE_ID = 2;
+private static final UriMatcher matcher = 
+  new UriMatcher(UriMatcher.NO_MATCH);
+static {
+  matcher.addURI("contacts", "people", PEOPLE);
+  matcher.addURI("contacts", "people/#", PEOPLE_ID);
+}
+
+public String getType(Uri url){
+  int match = sURIMatcher.match(url);
+  switch (match){
+  case PEOPLE:
+    return "vnd.android.cursor.dir/person";
+  case PEOPLE_ID:
+    return "vnd.android.cursor.item/person";
+    ...
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Content Provider and onCreate</h3>
+<p>like activities content provider use onCreate to lazy-initialize all the necessary object to handle the chosen datastore </p>
+<pre><code>private DatabaseHelper databaseHelper;
+
+@Override
+public boolean onCreate() {
+  databaseHelper = new DatabaseHelper(getContext());
+  return false;
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Notes</h3>
+<ul>
+  <li>Single point where all the data request are passing so you can implement a security layer</li>
+</ul>
 
 <!-- ==================================================== -->
 </article>
