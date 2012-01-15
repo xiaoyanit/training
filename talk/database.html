@@ -17,48 +17,165 @@
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3></h3>
-<ul>
-  <li></li>
-  <li></li>
-  <li>
-</ul>
-
-<!-- ==================================================== -->
-</article><!-- slide separator--><article>
-<!-- ==================================================== -->
-
 <h3>SQLite</h3>
+<p>SQLite is a small embedded database</p>
+<p>SQLite uses Structured Query Language SQL</p>
+<p>The sqlite database is a single file in 
+  /data/data/your.package.name/databases/</p>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>talk about SQLiteOpenHelper</h3>
+<h3>Database and ContentProviders</h3>
+<p>Content providers are the perfect place where to handle all the database logic</p>
+<p>There is a lot of code to handle the database unless you use SQLiteOpenHelper</p>
+<p>SQLiteOpenHelper help in setting up a database, opening connections ecc..</p>
+<p>SQLiteOpenHelper provide you a life-cycle with onCreate and onUpdate</p>
+
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>create and update</h3>
+<h3>SQLiteOpenHelper implementation</h3>
+<pre><code>public class DatabaseHelper extends SQLiteOpenHelper {
+  private static final String DATABASE_NAME = "appinaday.db";
+  private static final int DATABASE_VERSION = 1;
+
+  public DatabaseHelper(Context context) {
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
+  }
+  @Override
+  public void onCreate(SQLiteDatabase db) {
+    //implement creation of tables
+  }
+  @Override
+  public void onUpgrade(SQLiteDatabase arg0, 
+      int newVersion, int oldVersion) {
+    //implements updates of the database schema
+  }
+}
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Version number and what change</h3>
+<h3>Create</h3>
+<p>Create is called if the database has never been created before</p>
+<pre><code>@Override
+public void onCreate(SQLiteDatabase db) {
+  db.execSQL("CREATE TABLE results"
+      + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)");
+  db.execSQL("INSERT INTO results (title) VALUES (\"title 1\")");
+}
+</code></pre>
+<p><span class="red">_id</span> is the default id column used in all th android classes</p>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Usage of the database in the content providers</h3>
+<h3>Update</h3>
+<p>Update is executed when you increment the version number</p>
+<p>You can DROP, ALTER tables and change data with insert and updates</p>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Making a query</h3>
+<h3>How to use the database in the content providers</h3>
+<pre><code>private DatabaseHelper databaseHelper;
+
+@Override
+public boolean onCreate() {
+  db = new DatabaseHelper(getContext()).getWritableDatabase();
+  if(db == null) {
+    return false;
+  }
+  return true;
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Query</h3>
+<p>Implementing the code of the provider 
+<pre><code>SQLiteDatabase db = databaseHelper.getReadableDatabase();
+db.query("results", 
+    projection, selection, selectionArgs, null, null, sortOrder);
+</code></pre>
+<p>Result in a query like:</p>
+
+
+raw query
+Table name
+Column list to return
+WHERE clause and parameters
+GROUP BY clause and parameters,
+ORDER BY clause and parameters
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Insert</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Delete</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Transactions</h3>
+<p>beginTransaction() at outset</p>
+<p>try/finally block with endTransaction() in finally</p>
+<p>setTransactionSuccessful() once transaction deemed complete</p>
+
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Cursors</h3>
+Manual Pattern
+moveToFirst()
+isAfterLast()
+getString(), getInt(), getFloat(),
+getDouble(), etc.
+Use getColumnIndex() to look up by name
+moveToNext()
+Call close() when done!
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>DAO</h3>
+<p>If the complexity of your schema grows try to use the DAO pattern</p>
+<pre><code>public interface Dao&lt;T extends BaseModel&gt; {
+  long save(T type);
+  void update(T type);
+  void delete(T type);
+  T get(long id);
+  List&lt;T&gt; getAll();
+}
+</code></pre>
+<p>Define the models and implements a common interface</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Notes</h3>
+<p><a href="http://code.google.com/p/sqlitegen/">SQLite Eclipse plugin</a></p> 
 
 <!-- ==================================================== -->
 </article>
