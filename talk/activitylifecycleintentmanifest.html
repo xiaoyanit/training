@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Activity lifecycle, Intents & the Manifest</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Activity lifecycle, Intents & the Manifest</h1>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Activity Lifecycle</h3>
+<ul>
+<p>Applications can have one or several activities</p>
+<p>Activities appear to live forever</p>
+<br>
+<li>User does not have to explicitly close activities</li>
+<li>User does not necessarily realize an activity was closed by Android “behind the scenes”</li>
+<li>Perception: infinite memory, no manual
+process manipulations necessary</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Activity Lifecycle</h3>
+<ul>
+<p>You never call a constructor on an activity</p>
+<p>Activity classes are like plug-ins – the framework creates the objects</p>
+<p>Android will call into the activity at various points to indicate changes of state - <b>onCreate()</b> has been the focus so far</p>
+</ul>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Activity Lifecycle</h3>
+<ul>
+  <img src="../image/activity_lifecycle.png" height="90%"/>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onCreate()</h3>
+<ul>
+<p>Activity has been created and is ready to interact with the rest of the framework</p>
+<br>
+<p>What to do:</p>
+<br>
+<li>Set up the user interface</li>
+<li>Connect to services that do not incur ongoing cost</li>
+<li>Database</li>
+<li>Telephony</li>
+<li>Your own services</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onStart()</h3>
+<br>
+<ul>
+<p>Activity can be seen by the user - but not interacted with</p>
+<br>
+<p>Normally not much is done at this stage</p>
+</ul>
+		
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onResume()</h3>
+<ul>
+<p>The activity is about to come to the foreground and the user will be able to interact with it</p>
+<br>
+<p>Its called for a new activity or one which already existed - the user is coming back to it</p>
+<br>
+<p>What to do:<p>
+<li>Restart anything you stopped in onPause()</li>
+<li>Refresh the UI for any changes that may have occurred while user was not looking</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3 style="position: fixed; left 50%;top: 45%; color: black;">
+	<b>Now the activity is ready to be used!</b>
+</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>When activities may be paused</h3>
+<br>
+<ul>
+<li>User presses HOME</li>
+<li>User takes a phone call or responds to a notification</li>
+<li>Another activity is launched</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onPause()</h3>
+<ul>
+<p>Called when another activity takes the foreground or when an activity is going to be destroyed</p>
+<br>
+<p>What to do: stop any resource-hogging actions</p>
+<li>Network I/O</li>
+<li>GPS access</li>
+<li>Non-essential background threads</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onStop()</h3>
+<br>
+<ul>
+<p>Activity can still be seen by the user - but not interacted with (usually its noticeable)</p>
+<br>
+<p>Again, normally not much is done at this stage</p>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onDestroy()</h3>
+<br>
+<ul>
+<p>Called when:</p>
+<br>
+<li>A user pressed the back buton</li>
+<li>The orientation has changed</li>
+<li>The system is low on resources and the activity was previously stopped</li>
+<br>
+<p><b>*** Possible that your process will be killed without this being called! (eg: a force close) ***</b></p>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onDestroy()</h3>
+<br>
+<ul>
+<p>What to do:</p>
+<br>
+<li>Disconnect from services, etc.</li>
+<li>Stop any activity-specific background threads</li>
+<li>Ensure nothing in your application holds onto this Activity instance so it can be garbage-collected</li>
+<br>
+<p>What <b>not</b> to do:</p>
+<br>
+<li>Deal with the UI - will get cleaned up for you</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Activity lifecycle demo</h3>
+<ul>
+  <img src="../image/launchmodesdemo_qrcode.png" />
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3 style="position: fixed; left 50%;top: 45%; color: black;">
+	So how do you start other activities???
+</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Intents!!!</h3>
+<ul>
+  <p>Messaging facility for late run-time binding between components</p>
+  <br>
+  <p>Intent objects can have:</p>
+  <br>
+  <li>Action</li>
+  <li>Data – URI and/or MIME type</li>
+  <li>Category</li>
+  <li>Extras – key/value pairs</li>
+  <li>Component name</li>
+  <li>Flags</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Explicit intent resolution</h3>
+<ul>
+  <br>
+  <pre><code>Intent intent = new Intent(this, HelloWorldActivity.class);
+
+startActivity(intent);</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Implicit intent resolution</h3>
+<ul>
+  <br>
+  <pre><code>Uri google = Uri.parse("http://www.google.com");
+
+Intent intent = new Intent( Intent.ACTION_VIEW, google);
+
+startActivity(intent);</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to define the implicit intent resolutions?</h3>
+<br>
+<ul>
+  <p>Intent filters:</p>
+  <pre><code>&lt;activity android:name=".SimpleBrowser" &gt;
+
+  &lt;intent-filter &gt;
+
+    &lt;action android:name="android.intent.action.VIEW" /&gt;
+
+    &lt;category android:name="android.intent.category.DEFAULT" /&gt;
+
+    &lt;data android:scheme="http" /&gt;
+
+  &lt;/intent-filter&gt;
+
+&lt;/activity&gt;</code></pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Intents are great!</h3>
+<br>
+<ul>
+  <p>Loosely coupled activities</p>
+  <br>
+  <p>Specify your behaviour as intentions</p>
+  <br>
+  <p>Activity re-use - starting an activity in a different application</p>
+</ul>
+
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3 style="position: fixed; left 50%;top: 45%; color: black;">
+	But where does that &lt;intent-filter&gt; go???
+</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>AndroidManifest.xml</h3>
+<br>
+<ul>
+  <p>Presents essential information about the application to the system</p>
+  <br>
+  <li>Java package name (namespace) - unique identifier</li>
+  <li>Describes the components of the application</li>
+  <li>Declares which permissions the application must have</li>
+  <li>Declares the API levels the app supports</li>
+  <li>Lists the libraries that the application must be linked against</li>
+  <br>
+  <p>Its what glues an app together!</p>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Simple Manifest</h3>
+<ul>
+  <pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.gnorsilva.playground"
+  android:versionCode="1"
+  android:versionName="1.0" &gt;
+
+  &lt;uses-sdk android:minSdkVersion="7" /&gt;
+
+  &lt;application &gt;
+    &lt;activity android:name=".MyList" &gt;
+
+      &lt;intent-filter &gt;
+        &lt;action android:name="android.intent.action.MAIN" /&gt;
+        &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+      &lt;/intent-filter&gt;
+
+    &lt;/activity&gt;
+  
+  &lt;/application&gt;
+&lt;/manifest&gt;</code></pre>
+</ul>
+
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
