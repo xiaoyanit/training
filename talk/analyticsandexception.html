@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Analytics and exceptions</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Analytics and exceptions</h1>  
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Analytics</h3>
+<ul>
+  <li>It is important to know what are the user doing with your app</li>
+  <li>Track with analytics activities, buttons or any other event</li>
+  <li>Track silent exceptions</li>
+  <li>There are lots of libraries : Google Analytics, WebTrends, Flurry ...</li>
+</ul> 
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Google analytics</h3>
+<ul>
+  <li>Very stable implementation</li>
+  <li>It is the most used</li>
+  <li>Has an api that is too web-driven but is simple</li>
+  <li>The api is not polluted with to many methods like webtrends</li>
+  <li>Google analytics expose the data collected with apis</li>
+  <li>You can track installation with the market</li>
+</ul> 
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Google analytics implementation</h3>
+<pre><code>tracker = GoogleAnalyticsTracker.getInstance();
+tracker.startNewSession(ANALYTICS_UID, 20, context);
+
+tracker.stopSession();
+
+//Tracking activities
+tracker.trackPageView("/someActivity");
+
+//Tracking events
+tracker.trackEvent(BUTTON_CATEGORY, CLICK_ACTION, 
+  label, position);
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exceptions</h3>
+<ul>
+  <li>The Android Market is not a good tool to track exception as only a small percentage is reported</li>
+  <li>It is difficult to manage history on different version of the reported issue on the market</li>
+  <li>Use something else Bugsense or Acra</li>
+</ul>
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Acra</h3>
+<ul>
+  <li>ACRA is a library enabling Android Application to automatically post their crash reports to a GoogleDoc form</li>
+  <li>Easy implementation</li>
+  <li>Very flexible but need a better user interface to handle the exceptions</li>
+</ul>
+<img src="../image/acra.png" />
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Bugsense</h3>
+<ul>
+  <li>~acra</li>
+  <li>But very nice ui to handle the exceptions</li>
+  <li>You can redirect acra logs to bugsense</li>
+</ul>
+<img src="../image/bugsense.png" />
+
+<!-- ==================================================== -->
+</article>
+
+    </section>
+  </body>
+</html>
