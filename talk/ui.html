@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>UI and design</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>UI and design</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>UI</h3>
+<ul>
+  <p>As mentioned before, Android's UI is made up of layouts and widgets</p>
+  <p>Configuring and combining these we come up with dialogs, menus, notifications...</p>
+  <p>We configure layouts and widgets through attributes in xml files</p>
+</ul>
+<pre><code>&lt;TextView
+    android:id="@+id/signupnow_title"
+    android:paddingBottom="@dimen/act_gutter_padding"
+    android:text="@string/signupnow_title"
+    android:textStyle="bold"
+    android:textSize="@dimen/text_size_p1"
+    android:textColor="@color/text_hint"
+    android:gravity="center"
+    android:visibility="gone" /&gt;</pre></code>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Application Resources</h3>
+<ul>
+  <li>Always externalize resources such as images and strings from your application code, so that you can maintain them independently</li>
+<li>Allows you to provide alternative resources that support specific device configurations such as different languages or screen sizes</li>
+<li>Placed in the res folder of your project eg:</li>
+<pre>res/
+    drawable/  
+        icon.png  
+    layout/  
+        main.xml
+        info.xml
+    values/  
+        strings.xml</pre>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Design</h3>
+<ul>
+<p>Great new resource: <a href="http://developer.android.com/design/index.html">http://developer.android.com/design/index.html</a></p>
+<br>
+<li>Android UI Patterns - notifications, dashboard, action bar</li>
+<li>Avoid classical mistake - Android is not iPhone! ex: back button on top</li>
+<li>Specific style - icons, colors, themes</li>
+</ul>
+
+
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>

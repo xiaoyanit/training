@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Styles and themes</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Styles and themes</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Styles</h3>
+<ul>
+	<li>Collection of properties that specify the look and format for a View or window</li>
+	<li>Defined in a different file from a layout</li>
+	<li>Same goal as CSS - separate the design from the content</li>
+</ul>
+<h3 style="padding-top:50px;">Themes</h3>
+<ul>
+	<li>Style applied to an entire Activity or Application</li>
+</ul>
+		
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Styles</h3>
+<p>Using styles we can turn this layout</p>
+<pre><code>&lt;TextView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textColor="#00FF00"
+    android:typeface="monospace"
+    android:text="@string/hello" /&gt;</code></pre>
+<p>Into:</p>
+<pre><code>&lt;TextView
+    style="@style/CodeFont"
+    android:text="@string/hello" /&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Defining styles</h3>
+<pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;resources&gt;
+    &lt;style name="CodeFont" parent="@android:style/TextAppearance.Medium"&gt;
+        &lt;item name="android:layout_width"&gt;fill_parent&lt;/item&gt;
+        &lt;item name="android:layout_height"&gt;wrap_content&lt;/item&gt;
+        &lt;item name="android:textColor"&gt;#00FF00&lt;/item&gt;
+        &lt;item name="android:typeface"&gt;monospace&lt;/item&gt;
+    &lt;/style&gt;
+&lt;/resources&gt;</code></pre>
+<p>Must be inside a XML file in the res/values/ folder (name of the file is not important)</b></p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Inheritance</h3>
+<p>Styles can extend other styles using the parent attribute</p>
+<pre><code>&lt;style name="GreenText" parent="@android:style/TextAppearance"&gt;
+    &lt;item name="android:textColor"&gt;#00FF00&lt;/item&gt;
+&lt;/style&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Inheritance</h3>
+<p>For styles you've defined yourself you can add the original style name and a period</p>
+<pre><code>&lt;style name="CodeFont.Red"&gt;
+    &lt;item name="android:textColor"&gt;#FF0000&lt;/item&gt;
+&lt;/style&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Inheritance</h3>
+<p>You can also extend the framework's themes</p>
+<pre><code>&lt;style name="LightThemeSelector" parent="@android:Theme.Light"&gt;
+	...
+&lt;/style&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Applying styles</h3>
+<p>To a view</p>
+<pre><code>&lt;TextView
+    style="@style/CodeFont"
+    android:text="@string/hello" /&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Applying styles</h3>
+<p>To an application</p>
+<pre><code>&lt;application android:theme="@style/CustomTheme"&gt;</code></pre>
+<p>To an activity</p>
+<pre><code>&lt;activity android:theme="@android:style/Theme.Dialog"&gt;</code></pre>
+<p>(Inside the manifest)</p>
+
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
