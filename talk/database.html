@@ -109,26 +109,22 @@ db.query("results",
     projection, selection, selectionArgs, null, null, sortOrder);
 </code></pre>
 <p>Result in a query like:</p>
-
-
-raw query
-Table name
-Column list to return
-WHERE clause and parameters
-GROUP BY clause and parameters,
-ORDER BY clause and parameters
+<pre><code>select projection 
+where selection selectionAgrs 
+order by sortOrder
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
 <h3>Insert</h3>
-
-<!-- ==================================================== -->
-</article><!-- slide separator--><article>
-<!-- ==================================================== -->
-
-<h3>Delete</h3>
+<pre><code>@Override
+public Uri insert(Uri uri, ContentValues values) {
+  long id = databaseHelper.getWritableDatabase().insert(
+    "results", null ,values);
+  return Uri.withAppendedPath(uri, "" + id);
+}</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
