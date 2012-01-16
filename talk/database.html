@@ -141,14 +141,19 @@ public Uri insert(Uri uri, ContentValues values) {
 <!-- ==================================================== -->
 
 <h3>Cursors</h3>
-Manual Pattern
-moveToFirst()
-isAfterLast()
-getString(), getInt(), getFloat(),
-getDouble(), etc.
-Use getColumnIndex() to look up by name
-moveToNext()
-Call close() when done!
+<ul>
+  <li>moveToFirst()</li>
+  <li>isAfterLast()</li>
+  <li>getString(), getInt(), getFloat(), getDouble(), etc.</li>
+  <li>Use getColumnIndex() to look up by name</li>
+  <li>moveToNext()</li>
+  <li>Call close() when done! in a finally clause!</li>
+</ul>
+<pre><code>while (c.moveToNext()){
+  values.add(c.getString(c.getColumnIndex("title")));
+}
+c.close();</code></pre>
+
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -171,7 +176,9 @@ Call close() when done!
 <!-- ==================================================== -->
 
 <h3>Notes</h3>
-<p><a href="http://code.google.com/p/sqlitegen/">SQLite Eclipse plugin</a></p> 
+<p><a href="http://code.google.com/p/sqlitegen/">SQLite Eclipse plugin</a></p>
+<p><a href="https://market.android.com/details?id=com.speedsoftware.sqleditor">SQLite app to list all the databases in your phone if is rooted</a></p>
+
 
 <!-- ==================================================== -->
 </article>
