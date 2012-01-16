@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Broadcast</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Broadcast</h1>  
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Broadcast</h3>
+<ul>
+  <li>Broacasts are messages to everyone</li>
+  <li>Broacasts are generated everytime there is something interesting : connectivity change, battery and more</li>
+  <li>If you are interesting in a broadcast you need to register a receiver</li>
+</ul> 
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Non-ordered broadcast</h3>
+<ul>
+  <li>The default type of broadcast is a non-ordered broadcast</li>
+  <li>They are sent to all the receivers at the same time</li>
+  <li>Example <span class="blue">ACTION_BATTER_LOW</span></li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Ordered broadcast</h3>
+<ul>
+  <li>In ordered mode, broadcasts are sent to each receiver in order</li>
+  <li>The order is controlled by the 
+  <span class="blue">android:priority</span> attribute for the intent-filter element in the manifest</li>
+  <li>More about <a href="http://android-developers.blogspot.com/2011/01/processing-ordered-broadcasts.html">ordered broadcast</a></li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Registering a BroadcastReceiver</h3>
+<p>First you need to create an instance of a receiver</p>
+<pre><code>private BroadcastReceiver serchCompletedReceiver 
+    = new BroadcastReceiver() {
+  @Override
+  public void onReceive(Context paramContext, 
+      Intent paramIntent) {
+    //implementation
+  }
+};
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Registering a BroadcastReceiver</h3>
+<p>You can register a broadcast receiver in the Activity</p>
+<pre><code>@Override
+protected void onResume() {
+  super.onResume();
+      
+  IntentFilter filter = 
+      new IntentFilter(SearchService.END_SEARCH_ACTION);
+  registerReceiver(serchCompletedReceiver, filter);
+}
+
+protected void onPause() {
+  unregisterReceiver(serchCompletedReceiver);
+  super.onPause();
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Registering a BR</h3>
+<p>In alternative can register a broadcast receiver in the manifest</p>
+<pre><code>&lt;receiver
+  android:name="com.novoda.location.receiver.
+      UnregisterPassiveListenerOnLostConnectivity"
+  enabled="false"&gt;
+  &lt;intent-filter&gt;
+    &lt;action
+      android:name="android.net.conn.CONNECTIVITY_CHANGE" /&gt;
+  &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Registering a BR</h3>
+<pre><code>&lt;receiver
+  android:name="com.novoda.location.receiver.
+      UnregisterPassiveListenerOnLowBattery"&gt;
+  &lt;intent-filter&gt;
+    &lt;action
+      android:name="android.intent.action.BATTERY_LOW" /&gt;
+    &lt;action
+      android:name="android.intent.action.BATTERY_OKAY" /&gt;
+  &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+
+&lt;receiver
+  android:name="com.novoda.location.receiver.
+      RestorePassiveListenerBoot"&gt;
+  &lt;intent-filter&gt;
+    &lt;action
+      android:name="android.intent.action.BOOT_COMPLETED" /&gt;
+  &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Intent Filters</h3>
+<p><span class="red">Intents</span> : request for an action to be performed</p>
+<p><span class="red">Broadcast Receivers</span> : listens to intents</p>
+<br />
+<p><span class="red">Intent Filters</span> : register Activities, Services, and Broadcast Receivers as being capable of performing an action on a set of data</p>
+<pre><code>IntentFilter filter = 
+  new IntentFilter(SearchService.END_SEARCH_ACTION);</code></pre>
+<p>Intent filters are required for intent resolution to match intents to activities, broadcast receivers or services</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to send a broadcast</h3>
+<p>Non ordered broadcasts</p>
+<pre><code>void sendBroadcast (Intent intent)</code></pre>
+<p>Ordered broadcasts</p>
+<pre><code>void sendOrderedBroadcast (Intent intent, 
+  String receiverPermission)</code></pre>
+<p>It is possible to restrict a broadcast to a specific application <span class="blue">setPackage (String packageName)</span></p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Process Lifecycle</h3>
+<ul>
+  <li>A process that is currently executing a BroadcastReceiver</li>
+  <li>Once you return from onReceive(), the BroadcastReceiver is no longer active you can't do async call</li>
+  <li>For longer-running operations you will often use a Service in conjunction with a BroadcastReceiver to 
+  keep the containing process active for the entire time of your operation</li>
+</ul>
+
+<!-- ==================================================== -->
+</article>
+
+    </section>
+  </body>
+</html>

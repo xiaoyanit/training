@@ -11,7 +11,7 @@
 <article>
 <!-- ==================================================== -->
 
-<h1>Local services</h1>  
+<h1>Services</h1>  
    
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -19,24 +19,119 @@
 
 <h3>Why services?</h3>
 <ul>
-  <li>The lifecycle is not affected by configuration changes (orientation)</li>
+  <li>The lifecycle is not affected by configuration changes</li>
   <li>May keep running event if no activities are active</li>
   <li>Can arrange to run completely independently of activities</li>
   <li>Can be used as api for third-party integration</li>
-</ul> 
+  <li>A Service is not a separate process unless specified</li>
+  <li>A Service is not a thread</li>
+</ul>
+<p><span class="blue">Is a facility for the application to tell 
+  the system about something it wants to be doing in the background</span></p> 
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->   
    
+<h3>And... Remote Services</h3>
+<p><span class="blue">A facility for an application to expose 
+  some of its functionality to other applications. This corresponds to calls to 
+  Context.bindService(), which allows a long-standing connection 
+  to be made to the service in order to interact with it.</span></p>
+<br/>
+<p>MusicPlayer service</p> 
+
+  
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
 <h3>Service</h3>
+<p>The normal implementation</p>
+<pre><code>public class ExampleService extends Service {
+  @Override
+  public IBinder onBind(Intent intent) {
+    // used for remote services
+    return null;
+  }
+  
+  @Override
+  public void onCreate() {}
+  
+  @Override
+  public void onDestroy() {}
+  
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {}
+}
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
 <h3>IntentService</h3>
-   
+<p>IntentService are a particular version of services 
+  that runs on a background Thread and it is design 
+  to implement the command pattern</p>
+<pre><code>public class ExampleIntentService extends IntentService {
+  @Override
+  protected void onHandleIntent(Intent intent) {
+    //do the work
+  }
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Declaration</h3>
+<p>You need to declare a service in the manifest</p>
+<pre><code>&lt;service
+  android:exported="true"
+  android:name=".SearchService" &gt;
+  &lt;intent-filter &gt;
+    &lt;action android:name="com.novoda.appinaday.Search" /&gt;
+  &lt;/intent-filter&gt;
+&lt;/service&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to start services</h3>
+<p>Use the startService method from the context</p>
+<pre><code>Intent i = new Intent(SearchService.SEARCH_ACTION);
+i.putExtra("keyword", keyword);
+startService(i);
+</code></pre>
+<p>In alternative you can use the direct class</p>
+<pre><code>startService(new Intent(this, MyService.class))</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Start a service</h3>
+<ul>
+  <li>Creates the service if it is not already running</li>
+  <li>Sends the Intent to onStartCommand() or if is an IntentService, receives in onHandleIntent()
+  <li>Keeps the service running!</li>
+  <li>Creates the service if it is not already running</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Stopping a service</h3>
+<ul>
+  <li>Call stopService() with an Intent that identifies the service</li>
+  <li>Service calls stopSelf() used with intent service</li>
+</ul>
+
 <!-- ==================================================== -->
 </article>
 
