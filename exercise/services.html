@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Services exercises</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Services exercises</h1>  
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 1 : simple service</h3>
+<ul>
+  <li>Create a new project</li>
+  <li>Add a service</li>
+  <li>Add some logs to onStartCommand and onCreate and onDestroy</li>
+  <li>Make sure to stop the service after at the end of onStartCommand</li>
+  <li>From the main activity start a service</li>
+  <li>Check the logs</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution</h3>
+<p>From the Activity add startService in the onCreate</p>
+<pre><code>@Override
+public void onCreate(Bundle savedInstanceState) {
+  super.onCreate(savedInstanceState);
+  setContentView(R.layout.main);
+  
+  startService(new Intent(this, LoggingService.class));
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution</h3>
+<p>Create the new class LoggingService extending Service and add logs</p>
+<pre><code>public class LoggingService extends Service {
+	@Override
+	public IBinder onBind(Intent arg0) {
+		return null;
+	}
+	@Override
+	public void onCreate() {
+		Log.v("training", "onCreate");
+		super.onCreate();
+	}
+	@Override
+	public void onStart(Intent intent, int startId) {
+		Log.v("training", "onStart");
+		super.onStart(intent, startId);
+	}
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Solution</h3>
+<p>onStartCommand remember to call stopSelf!</p>
+<pre><code>@Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    Log.v("training", "onStartCommand");
+    stopSelf();
+    return START_STICKY;
+  }
+}
+
+@Override
+public void onDestroy() {
+  Log.v("training", "onDestroy");
+  super.onDestroy();
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 2 : Binding</h3>
+<ul>
+  <li></li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 3 : IntentService</h3>
+<ul>
+  <li>Create a new project</li>
+  <li>Call a few times an IntentService</li>
+  <li>Pass a counter with the intent</li>
+  <li>Verify they are executed in order</li>
+</ul>
+
+<!-- ==================================================== -->
+</article>
+
+    </section>
+  </body>
+</html>

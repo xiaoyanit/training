@@ -12,7 +12,19 @@
 <!-- ==================================================== -->
 
 <h1>Services</h1>  
-   
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>What is a service?</h3>
+<p>A Service is an application component that can perform 
+long-running operations in the background and does not provide a 
+user interface</p>
+<br />
+<p><span class="blue">Is a facility for the application to tell 
+  the system about something it wants to be doing in the background</span></p>
+
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
@@ -20,14 +32,10 @@
 <h3>Why services?</h3>
 <ul>
   <li>The lifecycle is not affected by configuration changes</li>
-  <li>May keep running event if no activities are active</li>
-  <li>Can arrange to run completely independently of activities</li>
-  <li>Can be used as api for third-party integration</li>
+  <li>Run completely independently of activities</li>
   <li>A Service is not a separate process unless specified</li>
-  <li>A Service is not a thread</li>
-</ul>
-<p><span class="blue">Is a facility for the application to tell 
-  the system about something it wants to be doing in the background</span></p> 
+  <li>Can be used as api for third-party integration</li>
+</ul> 
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -41,43 +49,58 @@
 <br/>
 <p>MusicPlayer service</p> 
 
-  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to use service</h3>
+<p>You can use a start service asking to do something</p>
+<br />
+<p>You can bind to a service and interact with it</p>
+
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
 <h3>Service</h3>
-<p>The normal implementation</p>
-<pre><code>public class ExampleService extends Service {
-  @Override
-  public IBinder onBind(Intent intent) {
-    // used for remote services
-    return null;
-  }
-  
-  @Override
-  public void onCreate() {}
-  
-  @Override
-  public void onDestroy() {}
-  
-  @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {}
-}
-</code></pre>
+<p>A service start when another application component like an
+Activity calls <span class="blue">startIntent()</span></p>
+<br />
+<p>A service should stop itself! User get you bad 
+reviews if services are left running.</p>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>IntentService</h3>
-<p>IntentService are a particular version of services 
-  that runs on a background Thread and it is design 
-  to implement the command pattern</p>
-<pre><code>public class ExampleIntentService extends IntentService {
+<h3>Binding Service</h3>
+<p>A service is "bound" when an application component binds 
+to it by calling <span class="blue">bindService()</span></p>
+<br />
+<p>A bound service offers a client-server interface that allows 
+components to interact with the service, send requests, get results</p>
+<br />
+<p>A bound service runs only as long as another 
+application component is bound to it.</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Service implementation</h3>
+<p>Just extend Service!</p>
+<pre><code>public class ExampleService extends Service {
   @Override
-  protected void onHandleIntent(Intent intent) {
-    //do the work
+  public void onCreate() {}
+  @Override
+  public void onDestroy() {}  
+  @Override
+  public int onStartCommand(Intent intent, int flags, 
+    int startId) {}
+  @Override
+  public IBinder onBind(Intent intent) {
+    // used for remote services
+    return null;
   }
 }
 </code></pre>
@@ -91,6 +114,11 @@
 <pre><code>&lt;service
   android:exported="true"
   android:name=".SearchService" &gt;
+&lt;/service&gt;
+</code></pre>
+<pre><code>&lt;service
+  android:exported="true"
+  android:name=".SearchService" &gt;
   &lt;intent-filter &gt;
     &lt;action android:name="com.novoda.appinaday.Search" /&gt;
   &lt;/intent-filter&gt;
@@ -101,36 +129,79 @@
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>How to start services</h3>
+<h3>How to start services?</h3>
 <p>Use the startService method from the context</p>
-<pre><code>Intent i = new Intent(SearchService.SEARCH_ACTION);
+<pre><code>startService(new Intent(this, MyService.class))</code></pre>
+<p>In alternative you can use the direct class if you have defined a filter</p>
+<pre><code>Intent i = new Intent("com.novoda.appinaday.Search");
 i.putExtra("keyword", keyword);
 startService(i);
 </code></pre>
-<p>In alternative you can use the direct class</p>
-<pre><code>startService(new Intent(this, MyService.class))</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
 <h3>Start a service</h3>
+<br />
+<p>If it is not already running</p>
 <ul>
-  <li>Creates the service if it is not already running</li>
-  <li>Sends the Intent to onStartCommand() or if is an IntentService, receives in onHandleIntent()
-  <li>Keeps the service running!</li>
-  <li>Creates the service if it is not already running</li>
+  <li>onCreate</li>
+  <li>onStart</li>
+</ul>
+<br />
+<p>If it is already running call</p>
+<ul>
+  <li>onStart</li>
 </ul>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
+<h3>onStart (pre-2.0) vs onStartCommand</h3>
+<pre><code>@Override
+public void onStart(Intent intent, int startId) {
+  handleCommand(intent);
+}
+
+@Override
+public int onStartCommand(Intent intent, int flags, int startId) {
+  handleCommand(intent);
+  return START_STICKY;
+}
+
+protected void handleCommand(Intent intent) {
+  //real work
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
 <h3>Stopping a service</h3>
-<ul>
-  <li>Call stopService() with an Intent that identifies the service</li>
-  <li>Service calls stopSelf() used with intent service</li>
-</ul>
+<br />
+<p>Call stopService() with an Intent that identifies the service</p>
+<br />
+<p>Service calls stopSelf() used with intent service</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>IntentService</h3>
+<p>IntentService are a particular version of services 
+  that runs on a background thread and it is design 
+  to implement the command pattern</p>
+<pre><code>public class ExampleIntentService extends IntentService {
+  @Override
+  protected void onHandleIntent(Intent intent) {
+    //do the work
+  }
+}
+</code></pre>
+<p>Most importantly they stop after onHandleIntent is finished</p>
 
 <!-- ==================================================== -->
 </article>
