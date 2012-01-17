@@ -31,7 +31,7 @@
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Solution</h3>
+<h3>Solution 1</h3>
 <p>From the Activity add startService in the onCreate</p>
 <pre><code>@Override
 public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public void onCreate(Bundle savedInstanceState) {
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Solution</h3>
+<h3>Solution 1</h3>
 <p>Create the new class LoggingService extending Service and add logs</p>
 <pre><code>public class LoggingService extends Service {
 	@Override
@@ -69,7 +69,7 @@ public void onCreate(Bundle savedInstanceState) {
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
-<h3>Solution</h3>
+<h3>Solution 1</h3>
 <p>onStartCommand remember to call stopSelf!</p>
 <pre><code>@Override
   public int onStartCommand(Intent intent, int flags, int startId) {
@@ -89,11 +89,89 @@ public void onDestroy() {
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
+<h3>Solution 1</h3>
+<p>Declare the service in the manifest</p>
+<pre><code>&lt;service android:exported="true" 
+  android:name=".LoggingService"&gt;&lt;/service&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
 
 <h3>Exercise 2 : Binding</h3>
 <ul>
-  <li></li>
+  <li>From the previous exercise modify the service to add a local binder</li>
+  <li>Add a public method to the service like success and add logs</li>
+  <li>From the activity bind to the method instead of starting it</li>
+  <li>Call success method and unbind the service when is finished</li>
 </ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<p>Add a LocalBinder to the service</p>
+<pre><code>private final IBinder mBinder = new LocalBinder();
+
+public class LocalBinder extends Binder {
+  public LoggingService getService() {
+      return LoggingService.this;
+  }
+}
+  
+@Override
+public IBinder onBind(Intent arg0) {
+  return mBinder;
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<p>Add a success method so we can call it from the activity</p>
+<pre><code>public void success() {
+  Log.v("training", "success");
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<p>In the activity prepare a serviceConnection</p>
+<pre><code>private ServiceConnection serviceConnection 
+    = new ServiceConnection() {
+  @Override
+  public void onServiceConnected(ComponentName className, 
+      IBinder service) {
+  	LoggingService loggingService = 
+        ((LoggingService.LocalBinder) service).getService();
+  	Log.v("training", "onServiceConnected");
+  	loggingService.success();
+  	unbindService(serviceConnection);
+  }
+  @Override
+  public void onServiceDisconnected(ComponentName className) {
+  	serviceConnection = null;
+  	Log.v("training", "onServiceDisconnected");
+  }
+};
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<p>Finally we need to bind onCreate</p>
+<pre><code>bindService(new Intent(this, LoggingService.class), 
+  serviceConnection, Context.BIND_AUTO_CREATE);
+</code></pre>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -106,6 +184,51 @@ public void onDestroy() {
   <li>Pass a counter with the intent</li>
   <li>Verify they are executed in order</li>
 </ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 3</h3>
+<p>Create a new class LoggingIntenteService extending IntentService</p>
+<pre><code>public class LoggingIntentService 
+    extends IntentService {
+  public LoggingIntentService() {
+    super("LoggingIntentService");
+  }
+
+  @Override
+  protected void onHandleIntent(Intent i) {
+    Log.v("training", "onHandleIntent " 
+      + i.getIntExtra("counter", -1));
+  }
+
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 3</h3>
+<p>In the activity call start the intent service a few times like this:</p>
+<pre><code>for(int i = 0;i<4; i++) {
+  Intent intent = new Intent(this, LoggingIntentService.class);
+  intent.putExtra("counter", i);
+  startService(intent);
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 3</h3>
+<p>Finally declare the intent service in the manifest</p>
+<pre><code>&lt;service android:exported="true" 
+  android:name=".LoggingIntentService"&gt;&lt;/service&gt;
+</code></pre>
+<p>Check the logs!</p>
 
 <!-- ==================================================== -->
 </article>

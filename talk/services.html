@@ -190,6 +190,58 @@ protected void handleCommand(Intent intent) {
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
+<h3>Local Binding</h3>
+<p>Create a LocalBinder in the service</p>
+<pre><code>private final IBinder mBinder = new LocalBinder();
+
+public class LocalBinder extends Binder {
+  public LoggingService getService() {
+      return LoggingService.this;
+  }
+}</code></pre>
+<p>Make sure to return it in the onBind</p>
+<pre><code>@Override
+public IBinder onBind(Intent arg0) {
+  return mBinder;
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Local Binding</h3>
+<p>In the activity first you need to implement a service connection</p>
+<pre><code>private ServiceConnection serviceConnection 
+    = new ServiceConnection() {
+  @Override
+  public void onServiceConnected(ComponentName className, 
+      IBinder service) {
+    //here you get the binder and you can call any method on service
+  }
+  @Override
+  public void onServiceDisconnected(ComponentName className) {
+    serviceConnection = null;
+  }
+};
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Local Binding</h3>
+<p>In the activity bind the service with the connection</p>
+<pre><code>bindService(new Intent(this, LoggingService.class), 
+  serviceConnection, Context.BIND_AUTO_CREATE);</code></pre>
+<p>Make sure to call unbindService when you have finished</p>
+<pre><code>unbindService(serviceConnection);
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
 <h3>IntentService</h3>
 <p>IntentService are a particular version of services 
   that runs on a background thread and it is design 
