@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Animations</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Animations</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Animations</h3>
+<br>
+<p>There are a few types of animtaions:</p>
+<ul>
+  <li>Drawable - showing a sequence of images in a certain order</li>
+  <li>View - performs transformations on an image</li>
+  <li>Property - modifying an object's property values over a period of time</li>
+</ul>
+
+<!-- ==================================================== --> 
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Drawable (aka frame) animation</h3>
+<br>
+<p>Simplest animation - like a film</p>
+<pre><code>&lt;animation-list 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true"&gt;
+    &lt;item android:drawable="@drawable/rocket_thrust1" 
+    	android:duration="200" /&gt;
+    &lt;item android:drawable="@drawable/rocket_thrust2" 
+    	android:duration="200" /&gt;
+    &lt;item android:drawable="@drawable/rocket_thrust3" 
+    	android:duration="200" /&gt;
+&lt;/animation-list&gt;</code></pre>
+
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>View (aka tween) animation</h3>
+<br>
+<p>Only works on views</p>
+<p>Does not change default properties - eg: a button that moves will have its click area where it was originally before animating</p>
+<p>Uses an interpolator - defines the rate of change</p>
+<p>A few things can be animated:</p>
+<ul>
+	<li>Alpha</li>
+	<li>Scale</li>
+	<li>Translate</li>
+	<li>Rotate</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Simple example of a view animation</h3>
+<br>
+<p>Saved as res/anim/spinning.xml</p>
+<pre><code>&lt;rotate xmlns:android="http://schemas.android.com/apk/res/android"
+  android:interpolator="@android:anim/linear_interpolator"
+  android:duration="1000"
+  android:fromDegrees="360"
+  android:toDegrees="0"
+  android:pivotX="50%"
+  android:pivotY="50%"
+  android:repeatCount="infinite" /&gt;</code></pre>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Simple example of a view animation</h3>
+<br>
+<pre><code>   RotateAnimation rotate = new RotateAnimation(360, 0, 0.5f, 0.5f);
+    rotate.setInterpolator(new LinearInterpolator());
+    rotate.setDuration(1000);
+    rotate.setRepeatMode(Animation.INFINITE);</code></pre>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Applying the view animation</h3>
+<br>
+<pre><code>ImageView refresh = (ImageView) findViewById(R.id.refresh);
+Animation rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
+refresh.startAnimation(rotate);</code></pre>
+<br/>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise</h3>
+<br>
+<ul>
+  <li>Add the spinning animation to your project</li>
+  <li>Add this to your activity:</li>
+  <pre><code>overridePendingTransition(R.anim.spinning, R.anim.spinning);</code></pre>
+  <p>just after a call to startActivity(...) - eg after a button press</p>
+  <br>
+  <li>Tweak the animation parameters</li>
+</ul>
+  
+  <!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Property animation</h3>
+<br>
+<p>New - introduced in honeycomb (3.0)</p>
+<p>Can change an object's properties - eg: a button that moves will have its click area updated</p>
+<p>Applies to both objects that draw to the screen or don't</p>
+<p>Animation characteristics:</p>
+<ul>
+  <li>Duration</li>
+  <li>Time interpolation</li>
+  <li>Repeat count</li>
+  <li>Animator sets</li>
+  <li>Frame refresh delay</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Property animation</h3>
+<br>
+<p>Three main classes to use (all children of Animator):</p>
+<ul>
+  <li>AnimatorSet - group animations together to be run in relation to each other</li>
+  <li>ValueAnimator - Calculates the animated values but does not set it in the object - a callback is used</li>
+  <li>ObjectAnimator - subclass of ValueAnimator which automatically updates an object's field - specific accessor methods are required</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Property animation example</h3>
+<p>Should be placed in res/animator/</p>
+<pre><code>&lt;set android:ordering="sequentially"&gt;
+    &lt;set&gt;
+        &lt;objectAnimator
+            android:propertyName="x"
+            android:duration="500"
+            android:valueTo="400"
+            android:valueType="intType"/&gt;
+        &lt;objectAnimator
+            android:propertyName="y"
+            android:duration="500"
+            android:valueTo="300"
+            android:valueType="intType"/&gt;
+    &lt;/set&gt;
+    &lt;objectAnimator
+        android:propertyName="alpha"
+        android:duration="500"
+        android:valueTo="1f"/&gt;
+&lt;/set&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Property animation</h3>
+<br>
+<p>Loading and starting the animation:</p>
+<pre><code>AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(context, 
+                                        R.animator.property_animator);
+      
+set.setTarget(myObject);
+set.start();</code></pre>
+
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Property animation</h3>
+<br>
+<p>You can also create animations in java:</p>
+<pre><code>ValueAnimator animation = ValueAnimator.ofFloat(0f, 1f);
+animation.setDuration(1000);
+animation.start();</code></pre>
+
+<p>As ValueAnimator cannot operate on objects or properties directly, listeners have to be defined to intercept the changes</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Property animation</h3>
+<br>
+<p>You can also create animations in java:</p>
+<pre><code>ObjectAnimator anim = ObjectAnimator.ofFloat(foo, "alpha", 0f, 1f);
+anim.setDuration(1000);
+anim.start();</code></pre>
+
+<p>For ObjectAnimator to work properly you'll need:</p>
+<ul>
+  <li>Setter in the form: set<name>(Type var)</li>
+  <li>Getter in form: Type get<name>()</li>  
+  <li>Might need to call invalidate on certain objects</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Evaluators</h3>
+<br>
+<p>Used to calculate the values for any given property</p>
+<p>Evaluator classes available:</p>
+<ul>
+  <li>IntEvaluator</li>
+  <li>FloatEvaluator</li>
+  <li>ArgbEvaluator</li>
+  <li>TypeEvaluator - interface to create your own evaluator</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Evaluators</h3>
+<br>
+<p>Defining an evaluator:</p>
+<pre><code>public class FloatEvaluator implements TypeEvaluator {
+
+    public Object evaluate(float fraction, Object startValue, 
+                            Object endValue) {
+        float startFloat = ((Number) startValue).floatValue();
+        return startFloat + fraction * 
+                      (((Number) endValue).floatValue() - startFloat);
+    }
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Property animation</h3>
+<br>
+<p>And pass in your custom evaluator like this:</p>
+<pre><code>ValueAnimator animation = ValueAnimator.ofObject(new MyTypeEvaluator(), 
+                                startPropertyValue, endPropertyValue);
+animation.setDuration(1000);
+animation.start();</code></pre>
+s
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Specifying Keyframes</h3>
+<br>
+<p>Time/value pair that lets you define a specific state at a specific time of an animation</p>
+<p><b>PropertyValuesHolder</b> wraps around keyframes created and is used to get the animator</p>
+<pre><code>Keyframe kf0 = Keyframe.ofFloat(0f, 0f);
+Keyframe kf1 = Keyframe.ofFloat(.5f, 360f);
+Keyframe kf2 = Keyframe.ofFloat(1f, 0f);
+PropertyValuesHolder pvhRotation = PropertyValuesHolder.ofKeyframe(
+                                    "rotation", kf0, kf1, kf2);
+ObjectAnimator rotationAnim = ObjectAnimator.ofPropertyValuesHolder(
+                                            target, pvhRotation)
+rotationAnim.setDuration(5000ms);</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Animating with ViewPropertyAnimator</h3>
+<p>Simpler way to animate properties of a View in parallel</p>
+<pre><code>ObjectAnimator animX = ObjectAnimator.ofFloat(myView, "x", 50f);
+ObjectAnimator animY = ObjectAnimator.ofFloat(myView, "y", 100f);
+AnimatorSet animSetXY = new AnimatorSet();
+animSetXY.playTogether(animX, animY);
+animSetXY.start();</code></pre>
+<p>or this:</p>
+
+<pre><code>PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat("x", 50f);
+PropertyValuesHolder pvhY = PropertyValuesHolder.ofFloat("y", 100f);
+ObjectAnimator.ofPropertyValuesHolder(myView, pvhX, pvyY).start();</code></pre>
+
+<p>Can be replaced to:</p>
+<pre><code>myView.animate().x(50f).y(100f);</code></pre>
+
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise</h3>
+<br>
+<ul>
+  <li>Create a new project from "existing sample"</li>
+  <li>Select Android 3.0</li>
+  <li>Select ApiDemos</li>
+  <li>Run it on your device</li>
+  <li>Try out the different animations</li>
+  <li>Tweak the animation source code</li>
+  <li>Try to refactor the code to use ViewPropertyAnimators </li>
+</ul>
+
+<!-- ==================================================== -->      
+</article>
+     
+    </section>
+  </body>
+</html>
