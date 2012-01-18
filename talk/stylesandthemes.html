@@ -113,6 +113,104 @@
 <p>(Inside the manifest)</p>
 
 
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise</h3>
+<ul>
+	<li>Create a theme style like the one given in the slides and set it as your app's theme</li>
+	<li>Remove any attribute with wrap_content from your layouts</li>
+	<li>Create a new style called <b>Fill</b> and add two items to your theme: <b>android:layout_width</b> and <b>android:layout_height</b> both with <b>fill_parent</b> as their values</li>
+	<li>Replace <b>android:layout_width</b> and <b>android:layout_height</b> from widgets with this new style</li>
+	<li>Add an item to your theme that will set all text color to Blue ( #0000FF )</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution</h3>
+<p>Custom theme</p>
+<p>Create a new xml file in the res/values folder - eg: res/values/theme.xml - with the following</p>
+<pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;resources&gt;
+
+  &lt;style
+    name="Theme.AppInADay"
+    parent="@android:Theme.Light.NoTitleBar"&gt;
+    &lt;item name="android:layout_width"&gt;wrap_content&lt;/item&gt;
+    &lt;item name="android:layout_height"&gt;wrap_content&lt;/item&gt;
+  &lt;/style&gt;
+    
+&lt;/resources&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution</h3>
+<p>Set your app's theme to Light with NoTitleBar</p>
+<pre><code>&lt;application
+        ...
+        android:theme="@style/Theme.AppInADay"&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution</h3>
+<p>Remove any attribute with wrap_content from your layouts</p>
+<pre><code>&lt;ListView
+	  android:id="@+android:id/list"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content" /&gt;</code></pre>
+<p>Becomes:</p>
+<pre><code>&lt;ListView
+	  android:id="@+android:id/list"
+	  android:layout_width="fill_parent" /&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution</h3>
+<p>New style - <b>Fill</b></p>
+<p>Add to the theme file:</p>
+<pre><code>  &lt;style name="Fill"&gt;
+    &lt;item name="android:layout_width"&gt;fill_parent&lt;/item&gt;
+    &lt;item name="android:layout_height"&gt;fill_parent&lt;/item&gt;
+  &lt;/style&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution</h3>
+<p>Replace <b>android:layout_width</b> and <b>android:layout_height</b></p>
+<pre><code>&lt;LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"&gt;</code></pre>
+<p>Becomes:</p>
+<pre><code>&lt;LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Fill"
+    android:orientation="vertical" &gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution</h3>
+<p>Add an item to your theme that will set all text color to Blue ( #0000FF )</p>
+<pre><code>&lt;item name="android:textColor"&gt;#0000FF&lt;/item&gt;
+</code></pre>
+
+
+
+
 <!-- ==================================================== -->     
 </article>
      
