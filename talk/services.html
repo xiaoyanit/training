@@ -125,6 +125,19 @@ application component is bound to it.</p>
 &lt;/service&gt;
 </code></pre>
 
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Declaration</h3>
+<p>Services can be used by other applications</p>
+<br />
+<p>You can ensure that your service is private to your application 
+only if you include the <span class="blue">android:exported</span> 
+attribute and set it to "false". 
+This is effective even if your service supplies intent filters</p>
+
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
@@ -175,6 +188,30 @@ protected void handleCommand(Intent intent) {
   //real work
 }
 </code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onStartCommand returned value</h3>
+<br />
+<p><span class="blue">START_NOT_STICKY</span>kills the service after onStartCommand() returns, do not recreate the service, unless there are pending intents to deliver. This is the safest option to avoid running your service when not necessary.</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onStartCommand returned value</h3>
+<br />
+<p><span class="blue">START_STICKY</span> If the system kills the service after onStartCommand() returns, recreate the service and call onStartCommand(), but do not redeliver the last intent. Instead, the system calls onStartCommand() with a null intent, unless there were pending intents to start the service, in which case, those intents are delivered. This is suitable for media players (or similar services) that are not executing commands, but running indefinitely and waiting for a job.</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>onStartCommand returned value</h3>
+<br />
+<p><span class="blue">START_REDELIVER_INTENT</span> : If the system kills the service after onStartCommand() returns, recreate the service and call onStartCommand() with the last intent that was delivered to the service. Any pending intents are delivered in turn. This is suitable for services that are actively performing a job that should be immediately resumed, such as downloading a file.</p>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -243,7 +280,7 @@ public IBinder onBind(Intent arg0) {
 <!-- ==================================================== -->
 
 <h3>IntentService</h3>
-<p>IntentService are a particular version of services 
+<p>IntentService are a particular version of services (subclass)
   that runs on a background thread and it is design 
   to implement the command pattern</p>
 <pre><code>public class ExampleIntentService extends IntentService {
@@ -255,6 +292,15 @@ public IBinder onBind(Intent arg0) {
 </code></pre>
 <p>Most importantly they stop after onHandleIntent is finished</p>
 
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>IntentService</h3>
+<br />
+<p>Service that uses a worker thread to handle all start requests, one at a time</p>
+<br />
+<p>Best option if you don't require that your service handle multiple requests simultaneously</p>
 <!-- ==================================================== -->
 </article>
 

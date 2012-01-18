@@ -23,6 +23,20 @@
   <li>Broacasts are generated everytime there is something interesting : connectivity change, battery and more</li>
   <li>If you are interesting in a broadcast you need to register a receiver</li>
 </ul> 
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Intent Filters</h3>
+<p><span class="red">Intents</span> : request for an action to be performed</p>
+<p><span class="red">Broadcast Receivers</span> : listens to intents</p>
+<br />
+<p><span class="red">Intent Filters</span> : register Activities, Services, and Broadcast Receivers as being capable of performing an action on a set of data</p>
+<pre><code>IntentFilter filter = 
+  new IntentFilter("your.custom.action");</code></pre>
+<p>Intent filters are required for intent resolution to match intents to activities, broadcast receivers or services</p>
+
    
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -74,7 +88,7 @@ protected void onResume() {
   super.onResume();
       
   IntentFilter filter = 
-      new IntentFilter(SearchService.END_SEARCH_ACTION);
+      new IntentFilter("your custom action");
   registerReceiver(serchCompletedReceiver, filter);
 }
 
@@ -126,19 +140,6 @@ protected void onPause() {
   &lt;/intent-filter&gt;
 &lt;/receiver&gt;
 </code></pre>
-
-<!-- ==================================================== -->
-</article><!-- slide separator--><article>
-<!-- ==================================================== -->
-
-<h3>Intent Filters</h3>
-<p><span class="red">Intents</span> : request for an action to be performed</p>
-<p><span class="red">Broadcast Receivers</span> : listens to intents</p>
-<br />
-<p><span class="red">Intent Filters</span> : register Activities, Services, and Broadcast Receivers as being capable of performing an action on a set of data</p>
-<pre><code>IntentFilter filter = 
-  new IntentFilter(SearchService.END_SEARCH_ACTION);</code></pre>
-<p>Intent filters are required for intent resolution to match intents to activities, broadcast receivers or services</p>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>

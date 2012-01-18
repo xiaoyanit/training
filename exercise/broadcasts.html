@@ -30,14 +30,76 @@
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
+<h3>Solution 1</h3>
+<p>Declare the receiver in the manifest with custom action StartAction</p>
+<pre><code>&lt;receiver
+  enabled="false"
+  android:name=".CustomReceiver" &gt;
+  &lt;intent-filter &gt;
+      &lt;action android:name="StartAction" /&gt;
+  &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 1</h3>
+<p>Create a new BroadcastReceiver</p>
+<pre><code>public class CustomReceiver extends BroadcastReceiver {
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    Log.v("training" , "onReceive");
+  }
+
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 1</h3>
+<p>Last bit : send the broadcast</p>
+<pre><code>Log.v("training", "sending broadcast");
+sendBroadcast(new Intent("StartAction"));
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
 <h3>Exercise 2 : register a broadcast in the activity</h3>
 <ul>
   <li>From the broadcast receiver of the exercise 1 send a new broadcast</li>
-  <li>In the activity register a new broadcast waiting for the intent</li>
-  <li>Log something in the second receiver</li>
+  <li>Catch the new broadcast in the activity</li>
   <li>Check the logs</li>
 </ul>
 
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<p>Send a second broadcast from the Receiver</p>
+<pre><code>public class CustomReceiver extends BroadcastReceiver {
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    Log.v("training" , "onReceive");
+    context.sendBroadcast(new Intent("WorkDone"));
+  }
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<p>Register a new BroadcastReceiver in the activity</p>
+<pre><code>
+</code></pre>
 <!-- ==================================================== -->
 </article>
 
