@@ -63,7 +63,7 @@ public IBinder onBind(Intent intent) {
 private ServiceConnection messengerConnection = new ServiceConnection() {
   public void onServiceConnected(ComponentName className, IBinder service) {
     messenger = new Messenger(service);
-    Message msg = Message.obtain(null, 1, 0, 0);
+    Message msg = Message.obtain(null, 1);
     try {
       Log.v("training", "sending message");
         messenger.send(msg);
@@ -103,7 +103,7 @@ protected void onPause() {
 <h3>Exercise 6</h3>
 <ul>
   <li>Create a service with the messenger in a "provider application"</li>
-  <li>Connect from to the activity of a "client application"</li>
+  <li>Send a message to the activity of a "client application"</li>
 </ul>        
 <p><span class="red">Extra : send different type of message</span></p>
 
