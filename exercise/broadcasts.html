@@ -33,7 +33,6 @@
 <h3>Solution 1</h3>
 <p>Declare the receiver in the manifest with custom action StartAction</p>
 <pre><code>&lt;receiver
-  enabled="false"
   android:name=".CustomReceiver" &gt;
   &lt;intent-filter &gt;
       &lt;action android:name="StartAction" /&gt;
@@ -76,6 +75,9 @@ sendBroadcast(new Intent("StartAction"));
   <li>Catch the new broadcast in the activity</li>
   <li>Check the logs</li>
 </ul>
+<ul>
+  <li><span class="red">Extra : Intercept outgoing calls</span></li>
+</ul>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
@@ -97,9 +99,34 @@ sendBroadcast(new Intent("StartAction"));
 <!-- ==================================================== -->
 
 <h3>Solution 2</h3>
+<pre><code>@Override
+protected void onResume() {
+  super.onResume();
+  IntentFilter filter = new IntentFilter("WorkDone");
+  registerReceiver(workDoneReceiver, filter);
+}
+
+protected void onPause() {
+  unregisterReceiver(workDoneReceiver);
+  super.onPause();
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2 - extra</h3>
 <p>Register a new BroadcastReceiver in the activity</p>
-<pre><code>
+<pre><code>&lt;receiver
+  android:enabled="true"
+  android:name="com.novoda.services2.DialerReceiver" &gt;
+  &lt;intent-filter android:priority="2147483647" &gt;
+      &lt;action android:name=
+        "android.intent.action.NEW_OUTGOING_CALL" /&gt;
+  &lt;/intent-filter&gt;
+&lt;/receiver&gt;
 </code></pre>
+
 <!-- ==================================================== -->
 </article>
 

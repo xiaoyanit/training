@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Android training - Broadcast</title>
+    <title>Android training - Remote services</title>
     <meta charset='utf-8'>
     <script src='../res/slides.js'></script>
   </head>
@@ -17,23 +17,300 @@
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Broadcast</h3>
+<h3>AIDL (Android Interface Definition Language)</h3>
 <ul>
   <li>It is possible to expose services for other applications</li>
-  <li>Inter-process edition of the binding</li>
-</ul> 
+  <li>Inter-process communication IPC</li>
+  <li>Similar to the binding but across different applications</li>
+</ul>
+<p>AIDL is similar to IDL define an interface between client and service</p> 
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Broadcast</h3>
+<h3>Note about AIDL interfaces</h3>
 <ul>
-  <li>Broacasts are messages to everyone</li>
-  <li>Broacasts are generated everytime there is something interesting : connectivity change, battery and more</li>
-  <li>If you are interesting in a broadcast you need to register a receiver</li>
+  <li>The language is java base</li>
+  <li>All non-primitive object need to be declare with <span class="blue">in</span>, 
+    <span class="blue">out</span> or <span class="blue">inout</span> directional tag</li>
+  <li>Convention to use <span class="red">I</span>MyRemoteService 
+    as a name of the interface and MyRemoteService for the implementation</li>  
 </ul>
- 
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Defining an AIDL Interface</h3>
+<ul>
+  <li>Define the interface in a .aidl file</li>
+  <li>Include the file in all the apps that need to use it</li>
+  <li>Implement the binder in the service of the "provider app"</li>
+  <li>Remember to define the service in the manifest 
+    with some action filter for the "provider app"</li>
+  <li>From the "client app" bind to the service</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 1 : AIDL interface</h3>
+<pre><code>package com.android.vending.billing;
+
+import android.os.Bundle;
+
+interface IMarketBillingService {
+    /** Given the arguments in bundle form, 
+      returns a bundle for results. */
+    Bundle sendBillingRequest(in Bundle bundle);
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 2 : verify that the stub has been generated</h3>
+<br />
+<p>Check in the gen folder for the class IMyRemoteService</p>
+<pre><code> public static abstract class Stub extends 
+  android.os.Binder implements 
+  com.novoda.services1.IMyRemoteService
+</code></pre>
+<p>The stub is particularly important has is needed in the binding!</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 3 : aidl in the "client app"</h3>
+<br />
+<p>Share the aidl with the client app by copying it over</p>
+<br />
+<p>it is very important to get the interface right!</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 4 : Implement the service</h3>
+<pre><code>public class AidlService extends Service {
+  @Override
+  public IBinder onBind(Intent intent) {
+    return mBinder;
+  }
+  private final IAidlService.Stub mBinder = new IAidlService.Stub() {
+    @Override
+    public String handshake(String name) throws RemoteException {
+      Log.v("training", "handshake : " + name);
+      return "luigi";
+    }
+  };
+}
+</code></pre>
+<p>define the service in the manifest</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 5 : Bind the service in the "client app"</h3>
+<pre><code> private IAidlService aidlService;
+  
+private ServiceConnection aidlServiceConnection = new ServiceConnection() {
+  public void onServiceConnected(ComponentName className, IBinder service) {
+    Log.v("training", "service connected");
+    aidlService = IAidlService.Stub.asInterface(service);
+    ....
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>AIDL must be thread-safe</h3>
+<br />
+<p>Calls from a remote process are dispatched from a thread
+ pool the platform maintains inside of your own process</p>
+<br />
+<p>An implementation of an AIDL interface must be completely 
+thread-safe</p>
+<br />
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 1 : first aidl</h3>
+<ul>
+  <li>Create a "provider app" and expose a remote service</li>
+  <li>The aidl interface should have a method like : </li>
+</ul>
+<pre><code>String handshake(String name)</code></pre>
+<ul>
+  <li>Create a "client app" and bind to the remote service</li>
+  <li>Log execution of the method and the returned value</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 1</h3>
+<p>Create new file IAidlService.aidl</p>
+<pre><code>package com.novoda.services1;
+interface IAidlService {
+    String handshake(String name);
+}
+</code></pre>
+<p>copy the file in the src of the client app</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 1</h3>
+<p>Implement the service</p>
+<pre><code>public class AidlService extends Service {
+  @Override
+  public IBinder onBind(Intent intent) {
+    return mBinder;
+  }
+  private final IAidlService.Stub mBinder = new IAidlService.Stub() {
+    @Override
+    public String handshake(String name) throws RemoteException {
+      Log.v("training", "handshake : " + name);
+      return "luigi";
+    }
+  };
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 1</h3>
+<p>In the activity of the client app</p>
+<pre><code>private IAidlService aidlService;
+private ServiceConnection aidlServiceConnection = new ServiceConnection() {
+  public void onServiceConnected(ComponentName className, IBinder service) {
+    Log.v("training", "service connected");
+    aidlService = IAidlService.Stub.asInterface(service);
+    try {
+      String name = aidlService.handshake("Gonçalo");
+      Log.v("training", "name : " + name);
+    } catch (RemoteException e) {
+      Log.v("training", "exception : " + e.getMessage());
+    }
+  }
+  public void onServiceDisconnected(ComponentName className) {
+    Log.v("training", "Service has unexpectedly disconnected");
+    aidlService = null;
+  }
+};
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Passing complex object with IPC</h3>
+<br />
+<p>There are only two requirements
+<ul>
+  <li>Your class must implement Parcelable</li>
+  <li>You need to expose the class in the client app</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Implementation of Parcelable interface</h3>
+<ul>
+  <li>store the "state" of the object in the Parcel</li>
+  <li>add static field CREATOR in your class that implements Parcelable.Creator interface</li>
+  <li>finally, create an .aidl file that declares your parcelable class</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Parcelable example</h3>
+<pre><code>public class MyModel implements Parcelable</code></pre>
+
+<pre><code>public static final Parcelable.Creator&lt;MyModel&gt; 
+    CREATOR = new Parcelable.Creator&lt;MyModel&gt;() {
+    
+  public MyModel createFromParcel(Parcel in) {
+    return new MyModel(in);
+  }
+
+  public MyModel[] newArray(int size) {
+    return new MyModel[size];
+  }
+};</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Parceable example</h3>
+<pre><code>public MyModel() {}
+
+private MyModel(Parcel in) {
+  name = in.readString();
+  surname = in.readString();
+}
+
+@Override
+public int describeContents() {
+  return 0;
+}
+
+@Override
+public void writeToParcel(Parcel out, int flags) {
+  out.writeString(name);
+      out.writeString(surname);
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Parcelable .aidl</h3>
+<p>This file is more like an header</p>
+<pre><code>package com.novoda.services1;
+
+parcelable MyModel;
+</code></pre>
+<p>You have to share this file and the class file in the "client app"</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>describeContents method</h3>
+<br />
+<p>You can leave 0 as a return type</p>
+<br />
+<p>You can return <span class="blue">Parcelable.CONTENTS_FILE_DESCRIPTOR</span> 
+  only when you are passing a FileDescriptor</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 2 : Parcelable</h3>
+<ul>
+  <li>Implements a parcelable</li>
+  <li>Modify the previous exercise by adding a method that pass a parcelable</li>
+</ul>
+
 <!-- ==================================================== -->
 </article>
     </section>

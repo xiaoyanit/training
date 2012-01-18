@@ -107,7 +107,6 @@ protected void onPause() {
 <pre><code>&lt;receiver
   android:name="com.novoda.location.receiver.
       UnregisterPassiveListenerOnLostConnectivity"
-  enabled="false"&gt;
   &lt;intent-filter&gt;
     &lt;action
       android:name="android.net.conn.CONNECTIVITY_CHANGE" /&gt;
@@ -159,7 +158,6 @@ protected void onPause() {
 
 <h3>Process Lifecycle</h3>
 <ul>
-  <li>A process that is currently executing a BroadcastReceiver</li>
   <li>Once you return from onReceive(), the BroadcastReceiver is no longer active you can't do async call</li>
   <li>For longer-running operations you will often use a Service in conjunction with a BroadcastReceiver to 
   keep the containing process active for the entire time of your operation</li>

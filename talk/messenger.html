@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Messenger</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Messenger</h1>  
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Messenger</h3>
+<br />
+<p>Allow you to do IPC without the aidl</p>
+<br />
+<p>If you want multi-threading you need to moved to remote binding with AIDL</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 1</h3>
+<p>Implement an handler in the service of the "provider app"</p>
+<pre><code> class CustomHandler extends Handler {
+  @Override
+  public void handleMessage(Message msg) {
+    switch (msg.what) {
+        //TODO
+    }
+  }
+}
+
+Messenger messenger = new Messenger(new CustomHandler());
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 2</h3>
+<p>Add onbind implementation</p>
+<pre><code>@Override
+public IBinder onBind(Intent intent) {
+  return messenger.getBinder();
+}</code></pre>
+<p>Remember to expose the service in the manifest</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 4</h3>
+<p>In the client app implement a binding</p>
+<pre><code>private Messenger messenger;
+private ServiceConnection messengerConnection = new ServiceConnection() {
+  public void onServiceConnected(ComponentName className, IBinder service) {
+    messenger = new Messenger(service);
+    Message msg = Message.obtain(null, 1, 0, 0);
+    try {
+      Log.v("training", "sending message");
+        messenger.send(msg);
+    } catch (RemoteException e) {
+        e.printStackTrace();
+    }
+  }
+  public void onServiceDisconnected(ComponentName className) {
+    messenger = null;
+  }
+};
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Step 5</h3>
+<pre><code>@Override
+protected void onResume() {
+  super.onResume();
+  bindService(new Intent("com.novoda.services1.MessengerService"), 
+  		messengerConnection, Context.BIND_AUTO_CREATE);
+}
+
+@Override
+protected void onPause() {
+  unbindService(messengerConnection);
+  super.onPause();
+}
+</code></pre>  
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 6</h3>
+<ul>
+  <li>Create a service with the messenger in a "provider application"</li>
+  <li>Connect from to the activity of a "client application"</li>
+</ul>        
+<p><span class="red">Extra : send different type of message</span></p>
+
+<!-- ==================================================== -->
+</article>
+
+    </section>
+  </body>
+</html>
