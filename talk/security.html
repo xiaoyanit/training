@@ -19,102 +19,211 @@
 
 <h3>Permissions</h3>
 <ul>
-  <li>At the time of a call into the system, to prevent an application from executing certain functions.</li>
-  <li>When starting an activity, to prevent applications from launching activities of other applications.</li>
-  <li>Both sending and receiving broadcasts, to control who can receive your broadcast or who can send a broadcast to you.</li>
-  <li>When accessing and operating on a content provider.</li>
-  <li>Binding to or starting a service.</li>
+  <li>each application runs with a distinct system identity (Linux user ID and group ID)</li>
+  <li>no application, by default, has permission to perform any operations</li>
+  <li>any other security features need to use "permission" mechanism
+  <li>per-URI permissions</li>
 </ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Permissions</h3>
+<ul>
+  <li>Android sandboxes applications from each other</li>
+  <li>If an application has to access data need to request a permission</li>
+</ul>
+<p><span class="red">"The application sandbox does not depend on the 
+technology used to build an application. In particular the Dalvik VM is 
+not a security boundary, and any app can run native code (see the Android NDK). 
+All types of applications — Java, native, and hybrid — are sandboxed in the 
+same way and have the same degree of security from each other."</span></p>
  
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Enforcing your own permission</h3>
+<h3>Creating your own permission</h3>
 <p></p>
-<pre><code><permission android:name="com.me.app.myapp.permission.DEADLY_ACTIVITY"
+<pre><code>&lt;permission 
+  android:name="com.me.app.myapp.permission.DEADLY_ACTIVITY"
   android:label="@string/permlab_deadlyActivity"
   android:description="@string/permdesc_deadlyActivity"
   android:permissionGroup="android.permission-group.COST_MONEY"
-  android:protectionLevel="dangerous" /></code></pre>
+  android:protectionLevel="dangerous" /&gt;</code></pre>
   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
 
-- Activity permissions (applied to the <activity> tag) 
-restrict who can start the associated activity.
-- The permission is checked during Context.startActivity() 
-and Activity.startActivityForResult(); 
+<h3>PermissionGroup</h3>
+<ul>
+  <li>ACCOUNTS : Permissions for direct access to the accounts managed by the Account Manager.</li>
+  <li>COST_MONEY : Used for permissions that can be used to make the user spend money without their direct involvement.</li>
+  <li>SYSTEM_TOOLS : Group of permissions that are related to system APIs</li>
+</ul>
+<p><a href="http://developer.android.com/reference/android/Manifest.permission_group.html">all the permission groups</a></p>
+<pre><code>android.permission-group.ACCOUNTS</code></pre>
 
-- If the caller does not have the required permission then SecurityException is thrown from the call.
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
 
-
-
-- Service permissions (applied to the <service> tag) restrict who can 
-start or bind to the associated service. The permission is checked during 
-Context.startService(), Context.stopService() and Context.bindService(); 
-if the caller does not have the required permission then SecurityException 
-is thrown from the call.
-
-
-- BroadcastReceiver permissions (applied to the <receiver> tag) restrict 
-who can send broadcasts to the associated receiver. The permission 
-is checked after Context.sendBroadcast() returns, as the system tries 
-to deliver the submitted broadcast to the given receiver. As a result, 
-a permission failure will not result in an exception being thrown back 
-to the caller; it will just not deliver the intent. In the same way, 
-a permission can be supplied to Context.registerReceiver() to control 
-who can broadcast to a programmatically registered receiver. 
-Going the other way, a permission can be supplied when calling 
-Context.sendBroadcast() to restrict which BroadcastReceiver objects 
-are allowed to receive the broadcast (see below).
-
-- ContentProvider permissions (applied to the <provider> tag) 
-restrict who can access the data in a ContentProvider. 
-(Content providers have an important additional security facility 
-available to them called URI permissions which is described later.) 
-Unlike the other components, there are two separate permission 
-attributes you can set: android:readPermission restricts who can 
-read from the provider, and android:writePermission restricts who 
-can write to it. Note that if a provider is protected with both a 
-read and write permission, holding only the write permission does 
-not mean you can read from a provider. The permissions are checked 
-when you first retrieve a provider (if you don't have either permission, 
-a SecurityException will be thrown), and as you perform operations 
-on the provider. Using ContentResolver.query() requires holding 
-the read permission; using ContentResolver.insert(), ContentResolver.update(), 
-ContentResolver.delete() requires the write permission. 
-In all of these cases, not holding the required permission results 
-in a SecurityException being thrown from the call.
-
-
-- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h3>PermissionLevel</h3>
+<ul>
+  <li><span class="red">dangerous</span> : A higher-risk permission required approval from the user.</li>
+  <li><span class="red">signatureOrSystem</span> : A permission that the system 
+    grants only to applications that are in the Android system 
+    image or that are signed with the same certificates as those 
+    in the system image</li>
+  <li><span class="red">signature</span> :  same signature of the app that requested the permission then no approval request</li>
+  <li><span class="red">normal</span> : no approval requested during installation</li>
+</ul>  
   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to use permission on content providers</h3>
+<pre><code>&lt;provider 
+  android:name=".SecuredContentProvider" 
+  android:authorities="com.novoda.security" 
+  android:exported="true"
+  android:readPermission="com.novoda.tranining.READ" 
+  android:writePermission="com.novoda.tranining.WRITE"/&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 1 : content provider between apps</h3>
+<ul>
+  <li>Create a content provider in a "provider app"... just logs the methods!</li>
+  <li>In a "client app" call the query method</li>
+  <li>Check that works</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 2 : block with permission</h3>
+<ul>
+  <li>Add custom read and write permissions</li>
+  <li>Check that the "client application" is now crashing</li>
+</ul>
+<p><span class="red">Extra : play with insert/delete and write/read permission</span></p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<pre><code>&lt;permission android:name="com.novoda.tranining.READ"
+  android:label="@string/permission_label"
+  android:description="@string/permission_description"
+  android:permissionGroup="android.permission-group.DEVELOPMENT_TOOLS"
+  android:protectionLevel="dangerous" /&gt;
+&lt;permission android:name="com.novoda.tranining.WRITE"
+  android:label="@string/permission_label"
+  android:description="@string/permission_description"
+  android:permissionGroup="android.permission-group.DEVELOPMENT_TOOLS"
+  android:protectionLevel="dangerous" /&gt;
+</a></code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 2</h3>
+<pre><code>&lt;provider 
+  android:name=".SecuredContentProvider" 
+  android:authorities="com.novoda.security" 
+  android:exported="true"
+  android:readPermission="com.novoda.tranining.READ" 
+  android:writePermission="com.novoda.tranining.WRITE"
+  /&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 3 : use your own permission</h3>
+<ul>
+  <li>Add permission to the client app and make it work</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 3</h3>
+<pre><code>&lt;uses-permission android:name="com.novoda.tranining.READ"/&gt;
+&lt;uses-permission android:name="com.novoda.tranining.WRITE"/&gt;
+</code>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Activity</h3>
+<br />
+<p>Activity permissions restrict who can start the associated activity</p>
+<br />
+<p>checked during Context.startActivity()</p>
+<br>
+<pre><code>android:permission=""</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Service</h3>
+<br />
+<p>restrict who can start or bind to the associated service</p>
+<br />
+<p>The permission is checked during 
+Context.startService(), Context.stopService() and Context.bindService();</p>
+<br>
+<pre><code>android:permission=""</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>BroadcastReceiver</h3>
+<p>Restrict 
+who can send broadcasts to the associated receiver</p>
+<br />
+<pre><code>registerReceiver(receiver, filter, broadcastPermission, scheduler)
+
+sendBroadcast(intent, receiverPermission) 
+</code></pre>
+<br>
+<pre><code>android:permission=""</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Uri permission</h3>
+<br />
+<p>There are special methods that can manipulate permissions</p>
+<pre><code>Context.grantUriPermission()
+Context.revokeUriPermission()
+Context.checkUriPermission()</code></pre> 
+<p>Example of gmail attachment</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Resources</h3>
+<br />
+<p><a href="http://source.android.com/tech/security/index.html" >Tech info on security</a></p>
+<p><a href="http://groups.google.com/group/android-security-discuss" >Security user group</a></p>
 <!-- ==================================================== -->
 </article>
    

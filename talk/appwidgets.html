@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - App Widgets</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>App Widgets</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>App Widgets</h3>
+<ul>
+  <li>App Widgets are miniature application</li>
+  <li>They run in a App Widget host component</li>
+  <li>As they run in a different container you have strong limitation</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>App Widgets</h3>
+<br />
+<p>Stuff you need for widgets</p>
+<ul>
+  <li>class that extends AppWidgetProvider</li>
+  <li>appwidget-provider configuration</li>
+  <li>layout</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>App Widgets</h3>
+<p>And everythig is linked together with the manifest</p>
+<pre><code>&lt;receiver
+  android:label="Simple widget"
+  android:name=".SimpleAppWidgetProvider" &gt;
+  &lt;intent-filter &gt;
+      &lt;action 
+        android:name="android.appwidget.action.APPWIDGET_UPDATE" /&gt;
+  &lt;/intent-filter&gt;
+  &lt;meta-data
+    android:name="android.appwidget.provider"
+    android:resource="@xml/simpleappwidget" /&gt;
+&lt;/receiver&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>AppWidgetProvider</h3>
+<pre><code>public class SimpleAppWidgetProvider 
+      extends AppWidgetProvider {
+  @Override
+  public void onUpdate(Context context, 
+    AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    Log.v("training", "onUpdate");
+    super.onUpdate(context, appWidgetManager, appWidgetIds);
+  }
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    Log.v("training", "onReceive");
+    super.onReceive(context, intent);
+  }
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Widget info</h3>
+<p>This must be placed in the res/xml folder</p>
+<pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;appwidget-provider 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="144dp"
+    android:minHeight="144dp"
+    android:label="@string/issue_gallery_widget_title"
+    android:initialLayout="@layout/issue_gallery_widget" 
+    android:updatePeriodMillis="3600000"
+    /&gt;
+</code></pre>
+<p>Important updatePeriodMillis, time between onUpdate calls</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Layout</h3>
+<br />
+<p>App Widget layouts are based on RemoteViews and they <span class="red">do not support</span> all the view</p>
+<p>Layout that are supported are:</p>
+<ul>
+  <li>FrameLayout</li>
+  <li>LinearLayout</li>
+  <li>RelativeLayout</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Layout</h3>
+<br />
+<p>Views that are supported are:</p>
+<ul>
+  <li>AnalogClock</li>
+  <li>Button</li>
+  <li>Chronometer</li>
+  <li>ImageButton, ImageView</li>
+  <li>ProgressBar</li>
+  <li>TextView</li>
+  <li>ViewFlipper</li>
+  <li>ListView, GridView, StackView</li>
+  <li>AdapterViewFlipper</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Layout</h3>
+<br />
+<p>For every widget you have to define a layout, and you have to store a reference to it in the widget info</p>
+<pre><code>android:initialLayout="@layout/example_appwidget"</code></pre>
+<p></p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Configuration activity</h3>
+<br />
+<p>You can define a configuration activity</p>
+<pre><code>android:configure="someactivity"</code></pre>
+<p>This activity is used when the user add the widget</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 1</h3>
+<ul>
+  <li>Create a very basic widget</li>
+</ul>
+<p><span class="red">Extra :</span> play with 
+  <a href="http://developer.android.com/resources/samples/StackWidget/index.html">StackWidget</a></p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 1</h3>
+<p>Declare receiver in the manifest</p>
+<pre><code>&lt;receiver
+  android:label="Simple widget"
+  android:name=".SimpleAppWidgetProvider" &gt;
+  &lt;intent-filter &gt;
+      &lt;action android:name="android.appwidget.action.APPWIDGET_UPDATE" /&gt;
+  &lt;/intent-filter&gt;
+  &lt;meta-data
+      android:name="android.appwidget.provider"
+      android:resource="@xml/simpleappwidget" /&gt;
+&lt;/receiver&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 1</h3>
+<p>Create a file appwidget info the xml folder</p>
+<pre><code><?xml version="1.0" encoding="utf-8"?>
+&lt;appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="294dp"
+    android:minHeight="72dp"
+    android:updatePeriodMillis="86400000"
+    android:initialLayout="@layout/simple_widget" 
+    android:resizeMode="horizontal|vertical"&gt;
+&lt;/appwidget-provider&gt;
+</code></pre>
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 1</h3>
+<p>Add a simple layout</p>
+<pre><code><?xml version="1.0" encoding="utf-8"?>
+&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" &gt;
+    &lt;TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="Hello"
+        android:textSize="16sp"
+        android:textStyle="bold" /&gt;
+&lt;/RelativeLayout&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Stuff to look at</h3>
+<ul>
+  <li>Configuration activity</li>
+  <li>Preview</li>
+  <li>Widget and collections</li>
+  <li>Pending intents</li>
+  <li><a href="http://developer.android.com/guide/practices/ui_guidelines/widget_design.html">Design guidelines</a></li>
+</ul>
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
