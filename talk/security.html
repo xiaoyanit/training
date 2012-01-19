@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Android training - Broadcast</title>
+    <title>Android training - Security</title>
     <meta charset='utf-8'>
     <script src='../res/slides.js'></script>
   </head>
@@ -11,23 +11,114 @@
 <article>
 <!-- ==================================================== -->
 
-<h1>Broadcast</h1>  
+<h1>Security</h1>    
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Permissions</h3>
+<ul>
+  <li>At the time of a call into the system, to prevent an application from executing certain functions.</li>
+  <li>When starting an activity, to prevent applications from launching activities of other applications.</li>
+  <li>Both sending and receiving broadcasts, to control who can receive your broadcast or who can send a broadcast to you.</li>
+  <li>When accessing and operating on a content provider.</li>
+  <li>Binding to or starting a service.</li>
+</ul>
+ 
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Enforcing your own permission</h3>
+<p></p>
+<pre><code><permission android:name="com.me.app.myapp.permission.DEADLY_ACTIVITY"
+  android:label="@string/permlab_deadlyActivity"
+  android:description="@string/permdesc_deadlyActivity"
+  android:permissionGroup="android.permission-group.COST_MONEY"
+  android:protectionLevel="dangerous" /></code></pre>
+  
+
+- Activity permissions (applied to the <activity> tag) 
+restrict who can start the associated activity.
+- The permission is checked during Context.startActivity() 
+and Activity.startActivityForResult(); 
+
+- If the caller does not have the required permission then SecurityException is thrown from the call.
+
+
+
+- Service permissions (applied to the <service> tag) restrict who can 
+start or bind to the associated service. The permission is checked during 
+Context.startService(), Context.stopService() and Context.bindService(); 
+if the caller does not have the required permission then SecurityException 
+is thrown from the call.
+
+
+- BroadcastReceiver permissions (applied to the <receiver> tag) restrict 
+who can send broadcasts to the associated receiver. The permission 
+is checked after Context.sendBroadcast() returns, as the system tries 
+to deliver the submitted broadcast to the given receiver. As a result, 
+a permission failure will not result in an exception being thrown back 
+to the caller; it will just not deliver the intent. In the same way, 
+a permission can be supplied to Context.registerReceiver() to control 
+who can broadcast to a programmatically registered receiver. 
+Going the other way, a permission can be supplied when calling 
+Context.sendBroadcast() to restrict which BroadcastReceiver objects 
+are allowed to receive the broadcast (see below).
+
+- ContentProvider permissions (applied to the <provider> tag) 
+restrict who can access the data in a ContentProvider. 
+(Content providers have an important additional security facility 
+available to them called URI permissions which is described later.) 
+Unlike the other components, there are two separate permission 
+attributes you can set: android:readPermission restricts who can 
+read from the provider, and android:writePermission restricts who 
+can write to it. Note that if a provider is protected with both a 
+read and write permission, holding only the write permission does 
+not mean you can read from a provider. The permissions are checked 
+when you first retrieve a provider (if you don't have either permission, 
+a SecurityException will be thrown), and as you perform operations 
+on the provider. Using ContentResolver.query() requires holding 
+the read permission; using ContentResolver.insert(), ContentResolver.update(), 
+ContentResolver.delete() requires the write permission. 
+In all of these cases, not holding the required permission results 
+in a SecurityException being thrown from the call.
+
+
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+<!-- ==================================================== -->
+</article>
    
-<!-- ==================================================== -->
-</article><!-- slide separator--><article>
-<!-- ==================================================== -->
-
-<h3>Broadcast</h3>
-
-<!-- ==================================================== -->
-</article><!-- slide separator--><article>
-<!-- ==================================================== -->
-
-<h3>Broadcast</h3>
-  
-<!-- ==================================================== -->
-</article>
-  
+    </section>
   </body>
-</article>
+</html>
 
