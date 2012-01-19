@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Supporting multiple screens</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Supporting multiple screens</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Terms involved</h3>
+<br>
+<p>Orientation - default changes per device (eg: phone vs tablet)</p>
+<p>Screen sizes - small, normal, large, extra large</p>
+<br>
+<p>Screen density (dpi) - pixel count in a screen's physical area</p>
+<ul>
+  <li>ldpi - 120dpi</li>
+  <li>mdpi - 160dpi - base dpi</li>
+  <li>hdpi - 240 dpi</li>
+  <li>xhdpi - 320 dpi</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Terms</h3>
+<br>
+<p>Density-independent pixel - express dimensions in a density-independent way</p>
+<img src="../image/devices_displays_density.png" align="right"/>
+<ul>
+  <li>px = dp * (dpi / 160)</li>
+  <p>so</p>
+  <br>
+  <li>1dp = 1px at 160dpi (mdpi)</li>
+  <li>2px = 1dp at 320dpi (xhdpi)</li>
+</ul>
+<br>
+<p>Always use dps and not pxs when creating UIs</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How screen size and dpi map to devices</h3>
+<img src="../image/screens-ranges.png" style="padding-top: 50px;"/>
+<br>
+<p>Standardized from 3.0 (honeycomb)</p>
+<ul>
+  <li>xlarge screens are at least 960dp x 720dp</li>
+  <li>large screens are at least 640dp x 480dp</li>
+  <li>normal screens are at least 470dp x 320dp</li>
+  <li>small screens are at least 426dp x 320dp</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How screen size and dpi map to devices</h3>
+<table width="70%" height="10px" >
+    <tbody>
+    <tr>
+      <th></th>
+      <th>
+        <nobr>Low density (120), <em>ldpi</em></nobr>
+      </th>
+      <th>
+        <nobr>Medium density (160), <em>mdpi</em></nobr>
+      </th>
+      <th>
+        <nobr>High density (240), <em>hdpi</em></nobr><nobr>
+      </nobr></th>
+      <th>
+        <nobr>Extra high density (320), <em>xhdpi</em></nobr><nobr>
+      </nobr></th>
+    </tr>
+    <tr>
+      <th>
+        <em>Small</em> screen
+      </th>
+      <td><strong>QVGA (240x320)</strong></td>
+      <td></td>
+      <td>480x640</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>
+        <em>Normal</em> screen
+      </th>
+      <td><strong>WQVGA400 (240x400)</strong>
+        <br><strong>WQVGA432 (240x432)</strong></td>
+      <td><strong>HVGA (320x480)</strong></td>
+      <td><strong>WVGA800 (480x800)</strong>
+        <br><strong>WVGA854 (480x854)</strong>
+        <br>600x1024</td>
+      <td>640x960</td>
+    </tr>
+    <tr>
+      <th>
+        <em>Large</em> screen
+      </th>
+      <td><strong>WVGA800** (480x800)</strong>
+        <br><strong>WVGA854** (480x854)</strong></td>
+      <td><strong>WVGA800* (480x800)</strong>
+        <br><strong>WVGA854* (480x854)</strong>
+        <br>600x1024</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>
+        <em>Extra Large</em> screen
+      </th>
+      <td>1024x600</td>
+      <td><strong>WXGA (1280x800)</strong><sup>†</sup><br>
+          1024x768<br>1280x768</td>
+      <td>1536x1152<br>1920x1152
+        <br>1920x1200</td>
+      <td>2048x1536<br>2560x1536
+        <br>2560x1600</td>
+    </tr>
+</tbody></table>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How screen size and dpi map to devices</h3>
+<br>
+<p>What to avoid:</p>
+<img src="../image/density-test-bad.png" style="padding-top: 20px;" />
+<p>What to achieve:</p>
+<img src="../image/density-test-good.png" style="padding-top: 20px;"/>
+		
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to support Multiple Screens</h3>
+<br>
+<ul>
+  <li>Explicitly declare in the manifest which screen sizes your application supports</li>
+  <br>
+  <li>Provide different layouts for different screen sizes</li>
+  <br>
+  <li>Provide different bitmap drawables for different screen densities</li>
+  <br>
+  <li>Have one layout but change properties with different booleans/primitives for different screen sizes</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Configuration qualifiers</h3>
+<br>
+<p>Allows you to control what resource is used at runtime</p>
+<p>Folder naming convention (inside res/):</p>
+<pre><code>&lt;resources_name&gt;-&lt;qualifier&gt;</code></pre>
+<p>For example:</p>
+<pre><code>res/values-hdpi</code></pre>
+<p>You can have more than one qualifier:</p>
+<pre><code>res/layout-large-hdpi</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Configuration qualifiers</h3>
+<br>
+<p>Size</p>
+<ul>
+  <li>small</li>
+  <li>normal</li>
+  <li>large</li>
+  <li>xlarge</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Configuration qualifiers</h3>
+<br>
+<p>Density</p>
+<ul>
+  <li>ldpi</li>
+  <li>mdpi</li>
+  <li>hdpi</li>
+  <li>xhdpi</li>
+  <li>nodpi - resources for all densities</li>
+  <li>tvdpi - between mdpi and hdpi ~213dpi</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Configuration qualifiers</h3>
+<br>
+<p>Aspect ratio</p>
+<ul>
+  <li>long</li>
+  <li>notlong</li>
+</ul>
+<p>Orientation</p>
+<ul>
+  <li>land</li>
+  <li>port</li>
+</ul>
+<p>These qualifiers need to be declared in the order given:</p>
+<pre><code>&lt;resources_name&gt;-size-density-aspectratio-orientation</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Configuration qualifiers in practice</h3>
+<br>
+<p>In a layout a widget will have this attribute:</p>
+<pre><code>android:padding="@dimen/gutter_padding"</code></pre>
+<br>
+<p>In res/values-large/dimens.xml</p>
+<pre><code>&lt;dimen name="gutter_padding"&gt;10dp&lt;/dimen&gt;</code></pre>
+<p>In res/values-normal/dimens.xml</p>
+<pre><code>&lt;dimen name="gutter_padding"&gt;6dp&lt;/dimen&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>New qualifiers from Android 3.2</h3>
+<br>
+<p>Qualifier "size" is not very accurate:</p>
+<p>eg: 7" tablets share the size with 5" phone</p>
+<br>
+<p>To solve this new qualifiers were introduced in 3.2:</p>
+<ul>
+  <li>Smallest width: <b>sw&lt;N&gt;dp</b></li>
+  <li>Available screen width: <b>w&lt;N&gt;dp</b></li>
+  <li>Available screen heigth: <b>h&lt;N&gt;dp</b></li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>More about these qualifiers</h3>
+<br>
+<p>Smallest width - eg: layout-sw600dp</b></p>
+<ul>
+  <li>The minimum dp availble in the screen - either height or width</li>
+  <li>Does not change when orientation changes</li>
+  <li>Smaller than the total dp's available as some of that area belongs to the system UI</li>
+</ul>
+<br>
+<p>Available screen width and Available screen height</p>
+<ul>
+  <li>Both change when orientation changes</li>
+  <li>Also smaller than the total dp available</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Best practices</h3>
+<br>
+<ul>
+  <li>Use wrap_content, fill_parent or dp units (prefer wrap_content and fill_parent)</li>
+  <li>Try to avoid at all costs "px" values</li>
+  <li>Use "sp" when defining text sizes - sp is scaled like dp</li>
+  <li>Do not use AbsoluteLayout (deprecated)</li>
+  <li>Prefer RelativeLayout over LinearLayout</li>
+  <li>Supply alternative resources for different screen densities</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise</h3>
+<ul>
+  <li>Create two layouts with the same name but inside each one create different widgets</li>
+  <li>Place one in <b>res/layout</b> another in <b>res/layout-land</b></li>
+  <li>Set this layout in your activity, run your app and rotate - watch how it changes</li>
+  <li>Create a new layout in your res/layout folder and set this in your activity</li>
+  <li>Add widgets to it, but extract all attribute values - eg: layout_width="@dimen/width" or text="@string/hello"</li>
+  <li>Create a new values folder - <b>values-land</b></li>
+  <li>Copy the dimens and strings files into this folder and change the values - rotate and watch things change again...</li>
+</ul>
+
+		
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
