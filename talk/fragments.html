@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Fragments</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Fragments</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Quick overview</h3>
+<ul>
+  <li>Introduced in 3.0 (honeycomb)</li>
+  <br>
+  <li>Also available for previous SDKs in the support library</li>
+  <br>
+  <li>Added to support more dynamic and flexible UI in Tablets and Tvs</li>
+  <br>
+  <li>Fragments decompose application functionality and UI into reusable modules</li>
+  <br>
+  <li>You can add multiple fragments to a screen to avoid switching activities</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Quick overview</h3>
+<ul>
+  <li>Fragments must always be embedded in an activity</li>
+  <br>
+  <li>Fragments have their own lifecycle, state, and back stack</li>
+  <br>
+  <li>Its lifecycle is affected by its host activity's lifecycle</li>
+  <br>
+  <li>Fragments don't need an UI associated with them - they can be running in "the background""</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Different design philosophy</h3>
+<ul>
+  <li>Each fragment should be a modular and reusable activity component</li>
+  <br>
+  <li>Each fragment can define its own layout</li>
+  <br>
+  <p style="padding-bottom: 40px;">Best practice:</p>
+  <li>The activity knows about the fragment, but the fragment shouldn't know about the activity</li>
+  <br>
+  <li>The fragment should also not know about other fragments</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Fragments in action</h3>
+<img src="../image/fragments.png" width="100%" style="padding-top: 50px;"/>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Creating a fragment</h3>
+<br>
+<pre><code>public class ExampleFragment extends Fragment {
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, 
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+        
+        return inflater.inflate(R.layout.example_fragment, 
+                                container, 
+                                false);
+    }
+    
+}</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Adding a fragment to an activity</h3>
+<br>
+<pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"&gt;
+
+    &lt;fragment android:name="com.example.ExampleFragment"
+            android:id="@+id/my_example_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" /&gt;
+
+&lt;/LinearLayout&gt;</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Managing fragments</h3>
+<br>
+<pre><code>FragmentManager fragmentManager = getFragmentManager();</code></pre>
+
+<p>Fragment transactions</p>
+<ul>
+  <li>Set of changes to an activity's fragments</li>
+  <li>Can save each transaction in the back stack</li>
+<pre><code>FragmentTransaction fragmentTransaction = 
+                      fragmentManager.beginTransaction();</code></pre>
+</ul>
+
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Adding a fragment to an activity</h3>
+<br>
+<p>For eg: in <b>onCreate()</b>:</p>
+<pre><code>FragmentManager fragmentManager = getFragmentManager()
+FragmentTransaction fragmentTransaction = 
+                              fragmentManager.beginTransaction();
+                              
+ExampleFragment fragment = new ExampleFragment();
+fragmentTransaction.add(R.id.fragment_container, fragment);
+fragmentTransaction.commit();</code></pre>
+<p>All transactions need to be committed to be applied</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<img src="../image/activity_fragment_lifecycle.png" align="right" height="110%"/>
+<h3>Fragments lifecycle</h3>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>DialogFragment</h3>
+<pre style="margin-bottom: 0px;"><code>public class MyDialogFragment extends DialogFragment{
+  
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    AlertDialog.Builder builder = new Builder(getActivity());
+    builder.setTitle("Woops!");
+    builder.setMessage("Something bad happened");
+    builder.setPositiveButton(android.R.string.ok, null);
+    return builder.create();
+  }
+
+}</code></pre>
+<p>And show it:</p>
+<pre style="margin-top: 15px;margin-bottom: 10px;"><code>DialogFragment newFragment = MyDialogFragment.newInstance();
+newFragment.show(getFragmentManager(), "dialog");</code></pre>
+<p>Could also load it as a normal fragment in a transaction</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Extra fragment's info!</h3>
+<br>
+<ul>
+  <li>Calling <b>getActivity()</b> sometimes returns null</li>
+  <br>
+  <li>Fragments are not added to the back stack by default - you can add this behaviour per transaction</li>
+  <br>
+  <li>A fragment can retain its instance on a orientation change: <b>setRetainInstance(true)</b> - carefull with memory leaks!</li>
+  <br>
+  <li>ListFragment, PreferenceFragment, WebViewFragment</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Exercise</h3>
+<ul >
+  <li style="padding: 10px;">Add a fragment through xml</li>
+  <li style="padding: 10px;">Add a fragment through java</li>
+  <li style="padding: 10px;">Add a fragment without UI - (hint: you'll need to use a "tag")</li>
+  <li style="padding: 10px;">Add more fragments</li>
+  <li style="padding: 10px;">Transition between fragments and add them to the back stack</li>
+  <li style="padding: 10px;">Play with the Dialog and List fragments</li>
+</ul>
+
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
