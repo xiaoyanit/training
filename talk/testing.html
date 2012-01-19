@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Testing</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Testing</h1>
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Testing in android.. fun times!</h3>
+<br>
+<p>Android is a test averse environment</p>
+<ul>
+  <li>The framework is sometimes too coupled</li>
+  <li>Final classes</li>
+  <li>Hidden classes</li>
+  <li>Every method and constructor in android.jar throws an exception</li>  
+  <li>Different VM</li>
+  <li>Slow feedback</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Tools available in the framework</h3>
+<ul>
+  <li>Junit 3</li>
+  <br>
+  <li>Instrumentation</li>
+  <br>
+  <li>Mock objects (they're more like stubs)</li>
+  <br>
+  <li>Monkey</li>
+  <br>
+  <li>Monkey runner</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Other tools for android</h3>
+<ul>
+  <li>Robotium</li>
+  <br>
+  <li>Robolectric</li>
+  <br>
+  <li>Borachio</li>
+  <br>
+  <li>Chimpchat</li>
+  <br>
+  <li>Roboguice</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>So what to do?</h3>
+<br>
+<p>Unit test everything on devices?</p>
+<br>
+<p>Minimizes assumptions</p>
+<br>
+<p>Very slow feedback</p>
+<br>
+<p>Limited tool set</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Android x86</h3>
+<br>
+<p>Faster than running on device</p>
+<br>
+<p>But the problem of dexing and packaging remains</p>
+<br>
+<p>Might introduce false negatives due to porting</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Best to test on a jvm...</h3>
+<br>
+<p>Fast feedback</p>
+<br>
+<p>Lots of tools out there</p>
+<br>
+<p>Basic java behaviour should be the same for both JVM and DVM</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>JVM testing strategies</h3>
+<br>
+<p>Remove all exceptions from android.jar - there are scripts out there to do this</p>
+<br>
+<p>Mock/Stub the framework</p>
+<br>
+<p>Too much coupling between tests and implementation</p>
+<br>
+<p>Assuming too much about the framework</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>JVM testing strategies</h3>
+<br>
+<p>Compile jars from Android source and use these for testing</p>
+<br>
+<p>A big part of the source is native - could maybe combine with robolectric</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>JVM testing strategies</h3>
+<br>
+<p>Create utility helper classes that are injected</p>
+<br>
+<p>Mock these and in your business logic verify behaviour</p>
+<br>
+<p>Test the functionality of the helper classes seperately on device</p>
+<br>
+<p>Too much boiler plate code?</p>
+<br>
+<p>Re-writing the framework?</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+<h3>Whichever strategy you go for...</h3>
+<br>
+<p>Keep code as much as possible in plain java - separate your concerns</p>
+<br>
+<p>Minimize the need for UI testing</p>
+<br>
+<p>Be careful not to test the framework - that's what learning/exploratory tests are for...</p>
+
+<!-- ==================================================== -->     
+</article>
+     
+    </section>
+  </body>
+</html>
