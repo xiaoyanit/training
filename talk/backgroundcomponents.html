@@ -17,7 +17,19 @@
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Content Provider</h3>
+<h3>Content Provider - Single application</h3>
+<ul>
+  <li>Can be use to store private data</li>
+  <li>Maybe direct usage of SqliteOpenHelper</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Content Provider - Shared</h3>
+<br />
+<p>Examples</p>
 <ul>
   <li>Contacts</li>
   <li>Media store</li>
@@ -29,26 +41,51 @@
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Services Aidl</h3>
+<h3>Services - Single application</h3>
+<br />
+<p>Execute a task without being attach to activity lifecycle</p>
+<ul>
+  <li>no control over it : start > download</li>
+  <li>control over the service : bind > download progress</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Services - Shared - Aidl</h3>
+<br />
+<p>Examples</p>
 <ul>
   <li>Media player</li>
   <li>Payments</li>
 </ul>
-<p>Is about multiple calls of complex operations</p>
+<p>Make the implementation thread-safe!</p>
 
 <!-- ==================================================== -->
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
-<h3>Messenger</h3>
+<h3>Services - Shared - Messenger</h3>
+<br />
+<p>If you don't need too much control and you don't want a queue</p>
+<ul>
+  <li>Media player</li>
+  <li>Payments</li>
+</ul>  
+  
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>BroadcastReceiver</h3>
 <br>
-<p>Is a particular case of Services that apply well 
-  to case where you need a queue</p>
-
-<!-- ==================================================== -->
-</article><!-- slide separator--><article>
-<!-- ==================================================== -->
-
+<p>Send changes of state, something that has finished...</p>
+<br />
+<p>Inform multiple listener that something happen or something is required</p>
+<br />
+<p><span class="blue">From ICS you can restrict the scope with the package Intent.setPackage</span></p>
+  
 <!-- ==================================================== -->
 </article>
 
