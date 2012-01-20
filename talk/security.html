@@ -220,6 +220,102 @@ Context.checkUriPermission()</code></pre>
 </article><!-- slide separator--><article>
 <!-- ==================================================== -->
 
+<h3>UserId</h3>
+<br />
+<p>Every app has a specific userId</p>
+<br />
+<p>You can use the same userId for different applications</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Setting application to use the same userId</h3>
+<pre><code>&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.novoda.app2"
+    android:versionCode="1"
+    android:versionName="1.0" 
+    android:sharedUserId="com.novoda.app1" &gt;
+    &lt;uses-sdk android:minSdkVersion="14" /&gt;
+    &lt;application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" 
+        android:process="com.novoda.app1"&gt;
+</code></pre>
+<p>Do it in both the manifests</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 4</h3>
+<ul>
+  <li>create an app set a preference</li>
+  <li>on a second app try to get the value of the preference</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 4</h3>
+<br />
+<pre><code>public class App1 extends Activity {
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.main);
+      SharedPreferences prefs = getSharedPreferences(
+                                   "app1prefs", MODE_PRIVATE);
+      String value = "Hello from App1 preference file!";
+      prefs.edit().putString("shared_value", value).commit();
+   }
+   @Override
+   public String toString() {
+      return "Hello from App1 toString()!";
+   }
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 4</h3>
+<br />
+<pre><code>try {
+context1 = createPackageContext("com.novoda.app1",
+		CONTEXT_INCLUDE_CODE);
+Class&lt;?&gt; app1ActivityCls = context1.getClassLoader().loadClass(
+			"com.novoda.app1.App1Activity");
+	Object app1Activity = app1ActivityCls.newInstance();
+	Toast.makeText(this, app1Activity.toString(), Toast.LENGTH_LONG)
+			.show();
+} catch (Exception e) {
+	throw new RuntimeException("Context not found");
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Solution 4</h3>
+<br />
+<pre><code>SharedPreferences prefs = context1.getSharedPreferences("app1prefs", MODE_PRIVATE);
+TextView view =  (TextView) findViewById(R.id.hello);
+String shared = prefs.getString("shared_value", null);
+if (shared == null) {
+	view.setText("Failed to share!");
+} else {
+	view.setText(shared);
+}
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
 <h3>Resources</h3>
 <br />
 <p><a href="http://source.android.com/tech/security/index.html" >Tech info on security</a></p>
