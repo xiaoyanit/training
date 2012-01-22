@@ -301,7 +301,6 @@ Class&lt;?&gt; app1ActivityCls = context1.getClassLoader().loadClass(
 <!-- ==================================================== -->
 
 <h3>Solution 4</h3>
-<br />
 <pre><code>SharedPreferences prefs = context1.getSharedPreferences("app1prefs", MODE_PRIVATE);
 TextView view =  (TextView) findViewById(R.id.hello);
 String shared = prefs.getString("shared_value", null);
