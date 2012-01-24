@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Android and Maven</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Android and Maven</h1>  
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Android Maven Plugin</h3>
+<br />
+<p><span class="red">Good parts 1</span></p>
+<ul>
+  <li>It is stable, now on version 3.0.0</li>
+  <li>Perfect with Jenkins integration</li>
+  <li>Can handle library projects with apklib</li>
+  <li>Can handle google maps jars</li>
+  <li>You can control the AndroidManifest</li>
+  <li>If you abstract to a parent is not verbose</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Android Maven Plugin</h3>
+<br />
+<p><span class="red">Good parts 2</span></p>
+<ul>
+  <li>You can keep normal android file structure</li>
+  <li>Can run instrumentation tests</li>
+  <li>You can sign and zipalign the apks</li>
+  <li>...</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Android Maven Plugin</h3>
+<br />
+<p><span class="red">Problems</span></p>
+<ul>
+  <li>Proguard is a pain</li>
+  <li>Sharing android jars can be a problem (only a few are available in the public maven repo), check out maven android deployer</li>
+  <li>You need custom tools to run the build with different devices</li>
+  <li>Make sure to control all the jars you are importing directly or by indirect dependency</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Quick overview of the setup 1</h3>
+<br />
+<p>Declare a parent with the plugin</p>
+<pre><code>&lt;pluginManagement&gt;
+...
+  &lt;plugin&gt;
+    &lt;groupId&gt;com.jayway.maven.plugins.android.generation2&lt;/groupId&gt;
+    &lt;artifactId&gt;android-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${android.maven.plugin.version}&lt;/version&gt;
+  &lt;/plugin&gt;
+...
+
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Quick overview of the setup 2</h3>
+<br />
+<p>Configure the plugin</p>
+<pre><code>&lt;plugins&gt;
+...
+  &lt;plugin&gt;
+    &lt;groupId&gt;com.jayway.maven.plugins.android.generation2&lt;/groupId&gt;
+    &lt;artifactId&gt;android-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${android.maven.plugin.version}&lt;/version&gt;
+    &lt;configuration&gt;
+      
+    &lt;/configuration&gt;
+    &lt;extensions&gt;true&lt;/extensions&gt;
+  &lt;/plugin&gt;
+
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Quick overview of the setup 3</h3>
+<br />
+<p>Configure the plugin</p>
+<pre><code>&lt;sdk&gt;
+  &lt;platform&gt;${android.sdk.platform}&lt;/platform&gt;
+&lt;/sdk&gt;
+&lt;deleteConflictingFiles&gt;true&lt;/deleteConflictingFiles&gt;
+&lt;undeployBeforeDeploy&gt;true&lt;/undeployBeforeDeploy&gt;
+&lt;enableIntegrationTest&gt;true&lt;/enableIntegrationTest&gt;
+&lt;extractDuplicates&gt;true&lt;/extractDuplicates&gt;
+</code></pre>
+<p>You can manipulate the manifest</p>
+<pre><code>&lt;manifest&gt;
+  &lt;debuggable&gt;true&lt;/debuggable&gt;
+  &lt;versionCodeAutoIncrement&gt;true&lt;/versionCodeAutoIncrement&gt;
+&lt;/manifest&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Quick overview of the setup 4</h3>
+<br />
+<p>Use the deployer to have all the local jars</p>
+<br />
+<p><a href="https://github.com/mosabua/maven-android-sdk-deployer">Maven android deployer</a></p>
+<br />
+<p>Or use the maven public repo, but only a subset of all the versions are available</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Quick overview of the setup 5</h3>
+<br />
+<p>Declaring the dependency with local jars</p>
+<pre><code>&lt;dependency>
+  &lt;groupId&gt;android&lt;/groupId&gt;
+  &lt;artifactId&gt;android&lt;/artifactId&gt;
+  &lt;version&gt;${android.version}&lt;/version&gt;
+  &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Difference if you use the public maven repos</p>
+<pre><code>com.google.android</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Quick overview of the setup 6</h3>
+<br />
+<p>Declaring the dependency with local jars</p>
+<pre><code>&lt;build&gt;
+  &lt;sourceDirectory&gt;src&lt;/sourceDirectory&gt;
+&lt;/build&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Quick overview of the setup 6</h3>
+<br />
+<p>Sign the apk</p>
+<pre><code>&lt;artifactId&gt;maven-jarsigner-plugin&lt;/artifactId&gt;
+&lt;executions&gt;
+  &lt;execution&gt;
+    &lt;id&gt;signing&lt;/id&gt;
+    &lt;goals&gt;&lt;goal&gt;sign&lt;/goal&gt;&lt;/goals&gt;
+    &lt;phase&gt;package&lt;/phase&gt;
+    &lt;inherited&gt;true&lt;/inherited&gt;
+    &lt;configuration&gt;
+      &lt;includes&gt;&lt;include&gt;target/*.apk&lt;/include&gt;&lt;/includes&gt;
+      &lt;keystore&gt;${sign.keystore}&lt;/keystore&gt;
+      &lt;storepass&gt;${sign.storepass}&lt;/storepass&gt;
+      &lt;keypass&gt;${sign.keypass}&lt;/keypass&gt;
+      &lt;alias&gt;${sign.alias}&lt;/alias&gt;
+    &lt;/configuration&gt;
+  &lt;/execution&gt;
+&lt;/executions&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Quick overview of the setup 7</h3>
+<br />
+<p>Zipalign the apk</p>
+<pre><code>&lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+&lt;artifactId&gt;exec-maven-plugin&lt;/artifactId&gt;
+&lt;executions&gt;
+  &lt;execution&gt;
+    &lt;id&gt;zipalign&lt;/id&gt;
+    &lt;goals&gt;&lt;goal&gt;exec&lt;/goal&gt;&lt;/goals&gt;
+    &lt;phase&gt;install&lt;/phase&gt;
+    &lt;configuration&gt;
+      &lt;executable&gt;${ANDROID_HOME}/tools/zipalign&lt;/executable&gt;
+      &lt;arguments&gt;
+        &lt;argument&gt;-f&lt;/argument&gt;
+        &lt;argument&gt;4&lt;/argument&gt;
+        &lt;argument&gt;target/${project.build.finalName}.apk&lt;/argument&gt;
+        &lt;argument&gt;target/${project.build.finalName}-zipped.apk&lt;/argument&gt;
+      &lt;/arguments&gt;
+    &lt;/configuration&gt;
+  &lt;/execution&gt;
+&lt;/executions&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Maven release plugin</h3>
+<br />
+<p>Try to make use of the maven release plugin</p> 
+<pre><code>&lt;plugin>
+  &lt;artifactId&gt;maven-release-plugin&lt;/artifactId&gt;
+  &lt;configuration&gt;
+    &lt;autoVersionSubmodules&gt;true&lt;/autoVersionSubmodules&gt;
+    &lt;useReleaseProfile&gt;false&lt;/useReleaseProfile&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Exercise 1</h3>
+<ul>
+  <li>Setup a simple project with maven</li>
+  <li>Take as a reference the <a href="https://github.com/jayway/maven-android-plugin-samples">Android maven plugin samples</a></li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Maven - Eclipse integration</h3>
+<br />
+<p>There are 3 ways to handle integration with eclipse</p>
+<ul>
+  <li>mvn eclipse:eclipse</li>
+  <li>android eclipse plugin</li>
+  <li>copy of all the jars in libs folders by intercepting mvn dependency phase</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>1 : mvn eclipse:eclipse</h3>
+<br />
+<p>There are limitations on parameters you can set by pursuing this way</p>
+<ul>
+  <li>gen folder</li>
+  <li>sometimes you need to fix android setup</li>
+  <li>get more complicated with library projects</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>2 : android eclipse plugin</h3>
+<br />
+<p>Ideally should be the solution to use but...</p>
+<ul>
+  <li>Too many bugs</li>
+  <li>Keep an eye on the project and try to help</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>3 : Eclipse integration</h3>
+<br />
+<p>So far is the one that suite the most teams with different skills</p>
+<ul>
+  <li>You can import the parent and all the non-android project directly</li>
+  <li>You need to manually setup the android projects of the groups</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>3 : Eclipse integration</h3>
+<br />
+<p>Coping the jars on copy dependency</p>
+<pre><code>&lt;plugin&gt;
+  &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+  &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;id&gt;copy-dependencies&lt;/id&gt;
+      &lt;phase&gt;initialize&lt;/phase&gt;
+      &lt;goals&gt;&lt;goal&gt;copy-dependencies&lt;/goal&gt;&lt;/goals&gt;
+      &lt;configuration&gt;
+        &lt;outputDirectory&gt;libs&lt;/outputDirectory&gt;
+        &lt;excludeArtifactIds&gt;${eclipse.excludeArtifactIds}&lt;/excludeArtifactIds&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>3 : Eclipse integration</h3>
+<br />
+<p>Cleaning the jars on clean phase</p>
+<pre><code>&lt;plugin&gt;
+  &lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;
+  &lt;configuration&gt;
+    &lt;filesets&gt;
+      &lt;fileset&gt;
+        &lt;directory&gt;libs&lt;/directory&gt;
+        &lt;includes&gt;
+          &lt;include&gt;*.jar&lt;/include&gt;
+        &lt;/includes&gt;
+      &lt;/fileset&gt;
+    &lt;/filesets&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Maven and Android resources</h3>
+<ul>
+  <li><a href="http://code.google.com/p/maven-android-plugin/">Android maven plugin</a></li>
+  <li><a href="https://github.com/mosabua/maven-android-sdk-deployer">Maven android deployer</a></li>
+  <li><a href="https://github.com/jayway/maven-android-plugin-samples">Android maven plugin samples</a></li>
+  <li><a href="https://github.com/rgladwell/m2e-android">m2e-android</a>
+</ul>
+<!-- ==================================================== -->
+</article>
+
+    </section>
+  </body>
+</html>
