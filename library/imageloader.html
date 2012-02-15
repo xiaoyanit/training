@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Android training - Image loader</title>
+    <meta charset='utf-8'>
+    <script src='../res/slides.js'></script>
+  </head>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+    
+<article>
+<!-- ==================================================== -->
+
+<h1>Image loader</h1>  
+   
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>What is it for?</h3>
+<ul>
+  <li>Load images given a url</li>
+  <li>Caching of images on sdcard</li>
+  <li>You don't have to care about HttpClient or UrlConnection issues</li>
+  <li>You don't have to care about Bitmap factory issues with memory</li>
+  <li>or you can take inspiration from it</li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to add the library to your project?</h3>
+<ul>
+  <li>it is just a jar that can be <a href="https://github.com/novoda/public-mvn-repo/raw/master/releases/com/novoda/imageloader/imageloader-core/1.4.8/imageloader-core-1.4.8.jar">downloaded</a></li>
+  <li>you can use it as a dependency with maven</li>
+</ul>
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;com.novoda.imageloader.core&lt;/groupId&gt;
+  &lt;artifactId&gt;imageloader-core&lt;/artifactId&gt;
+ &lt;version&gt;1.4.8&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>You need to add our repo though</h3>
+<pre><code>&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id>public-mvn-repo-releases&lt;/id&gt;
+    &lt;url>https://github.com/novoda/public-mvn-repo/
+        raw/master/releases&lt;/url&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to use it - 1</h3>
+<p>Set a static reference in the Application class</p>
+<pre><code>public class DemoApplication extends Application {
+private static ImageManager imageManager;
+
+@Override
+public void onCreate() {
+  super.onCreate();
+  LoaderSettings settings = new SettingsBuilder().build(this);
+  imageManager = new ImageManager(this, settings);
+  //To clean the file cache
+  imageManager.getFileManager().clean(this);
+}
+
+public static ImageManager getImageLoader() {
+  return imageManager;
+}
+...
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to use it - 2</h3>
+<p>Declare a service for the clean up of the cache</p>
+<pre><code>&lt;service android:enabled="true" android:exported="false" 
+  android:name="com.novoda.imageloader.core.service.CacheCleaner"&gt;
+  &lt;intent-filter&gt;
+    &lt;action android:name="com.novoda.imageloader.
+      core.action.CLEAN_CACHE"/&gt;
+  &lt;/intent-filter&gt;
+&lt;/service&gt;
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>How to use it - 3</h3>
+<p>Add a field for the imageTagFactory in the activity</p>
+<pre><code>ImageTagFactory imageTagFactory 
+  = new ImageTagFactory(this, R.drawable.bg_img_loading);
+imageTagFactory.setErrorImageId(R.drawable.bg_img_notfound);
+</code></pre>
+<p>In the binder or in the set of the view you set the tag generated with the image tag factory</p>
+<pre><code>((ImageView) view).setTag(imageTagFactory.build(url));
+load(view);
+</code></pre>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Different settings - LruCache</h3>
+<p>If you have a lot of small images normal cache with soft references is not always the best choice</p>
+<pre><code>new SettingsBuilder()
+  .withCacheManager(new LruBitmapCache(50)).build(this);
+</code></pre>
+<p>You can build your own cache class!</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Different settings - AsyncTasks or single thread</h3>
+<p>In some scenario is better to have a single thread to download the images</p>
+<pre><code>new SettingsBuilder().withAsyncTasks(false).build(this);
+</code></pre>
+<p>There are more settings... you can explore them in the LoaderSettings class</p>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Code to copy and change</h3>
+<ul>
+  <li><a href="https://github.com/novoda/ImageLoader/blob/master/core/src/main/java/com/novoda/imageloader/core/network/UrlNetworkLoader.java">UrlNetworkLoader : if you want to see how to use UrlConnection to get images</a></li>
+  <li><a href="https://github.com/novoda/ImageLoader/blob/master/core/src/main/java/com/novoda/imageloader/core/loader/ConcurrentLoader.java">ConcurrentLoader : if you want to see how to implement your own loader task</a></li>
+  <li><a href="https://github.com/novoda/ImageLoader/blob/master/core/src/main/java/com/novoda/imageloader/core/bitmap/BitmapUtil.java">BitmapUtil : to see some code to manage all the problems of the image factory</a></li>
+</ul>
+
+<!-- ==================================================== -->
+</article><!-- slide separator--><article>
+<!-- ==================================================== -->
+
+<h3>Play with the code</h3>
+<p><a href="https://github.com/novoda/ImageLoader">Fork on Github</a></p>
+
+<!-- ==================================================== -->
+</article>
+
+    </section>
+  </body>
+</html>
